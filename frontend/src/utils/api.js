@@ -3,6 +3,24 @@ import axios from 'axios';
 // Base URL for API calls
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Authentication utility
+export const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  const userType = localStorage.getItem('userType');
+  return !!(token && userType);
+};
+
+export const getCurrentUser = () => {
+  return {
+    token: localStorage.getItem('token'),
+    userType: localStorage.getItem('userType'),
+    email: localStorage.getItem('userEmail'),
+    name: localStorage.getItem('userName'),
+    room: localStorage.getItem('userRoom'),
+    block: localStorage.getItem('userBlock')
+  };
+};
+
 // Create axios instance
 const api = axios.create({
   baseURL: BASE_URL,
@@ -26,25 +44,25 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('userType');
-      localStorage.removeItem('userEmail');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userRoom');
-      localStorage.removeItem('userBlock');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+// Response interceptor to handle errors (disabled for mock data)
+// api.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       // Token expired or invalid
+//       localStorage.removeItem('token');
+//       localStorage.removeItem('userType');
+//       localStorage.removeItem('userEmail');
+//       localStorage.removeItem('userName');
+//       localStorage.removeItem('userRoom');
+//       localStorage.removeItem('userBlock');
+//       window.location.href = '/login';
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 // Mock data for development
 export const mockComplaints = [
@@ -59,7 +77,16 @@ export const mockComplaints = [
     room: '101',
     block: 'A',
     upvotes: 5,
-    image: null
+    downvotes: 1,
+    image: null,
+    votes: {
+      'jane.smith@college.edu': 'up',
+      'mike.wilson@college.edu': 'up',
+      'sarah.jones@college.edu': 'up',
+      'alex.brown@college.edu': 'up',
+      'emma.davis@college.edu': 'up',
+      'david.lee@college.edu': 'down'
+    }
   },
   {
     id: 2,
@@ -72,7 +99,13 @@ export const mockComplaints = [
     room: '205',
     block: 'B',
     upvotes: 3,
-    image: null
+    downvotes: 0,
+    image: null,
+    votes: {
+      'john.doe@college.edu': 'up',
+      'mike.wilson@college.edu': 'up',
+      'sarah.jones@college.edu': 'up'
+    }
   },
   {
     id: 3,
@@ -85,7 +118,19 @@ export const mockComplaints = [
     room: '150',
     block: 'C',
     upvotes: 8,
-    image: null
+    downvotes: 1,
+    image: null,
+    votes: {
+      'john.doe@college.edu': 'up',
+      'jane.smith@college.edu': 'up',
+      'sarah.jones@college.edu': 'up',
+      'alex.brown@college.edu': 'up',
+      'emma.davis@college.edu': 'up',
+      'david.lee@college.edu': 'up',
+      'lisa.wang@college.edu': 'up',
+      'tom.chen@college.edu': 'up',
+      'anna.kumar@college.edu': 'down'
+    }
   },
   {
     id: 4,
@@ -98,7 +143,24 @@ export const mockComplaints = [
     room: '89',
     block: 'A',
     upvotes: 12,
-    image: null
+    downvotes: 2,
+    image: null,
+    votes: {
+      'john.doe@college.edu': 'up',
+      'jane.smith@college.edu': 'up',
+      'mike.wilson@college.edu': 'up',
+      'alex.brown@college.edu': 'up',
+      'emma.davis@college.edu': 'up',
+      'david.lee@college.edu': 'up',
+      'lisa.wang@college.edu': 'up',
+      'tom.chen@college.edu': 'up',
+      'anna.kumar@college.edu': 'up',
+      'robert.singh@college.edu': 'up',
+      'priya.patel@college.edu': 'up',
+      'raj.gupta@college.edu': 'up',
+      'sophie.martin@college.edu': 'down',
+      'james.wilson@college.edu': 'down'
+    }
   },
   {
     id: 5,
@@ -111,7 +173,12 @@ export const mockComplaints = [
     room: '67',
     block: 'B',
     upvotes: 2,
-    image: null
+    downvotes: 0,
+    image: null,
+    votes: {
+      'john.doe@college.edu': 'up',
+      'mike.wilson@college.edu': 'up'
+    }
   }
 ];
 
@@ -248,6 +315,45 @@ export const feedbackAPI = {
         resolve({ data: complaint });
       }, 500);
     });
+  }
+};
+
+export const votingAPI = {
+  voteComplaint: async (complaintId, voteType, userEmail) => {
+    // Mock implementation
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const complaint = mockComplaints.find(c => c.id === complaintId);
+        if (complaint) {
+          // Check if user already voted
+          const existingVote = complaint.votes[userEmail];
+          
+          if (existingVote) {
+            // User already voted, remove their vote
+            delete complaint.votes[userEmail];
+            if (existingVote === 'up') {
+              complaint.upvotes = Math.max(0, complaint.upvotes - 1);
+            } else {
+              complaint.downvotes = Math.max(0, complaint.downvotes - 1);
+            }
+          } else {
+            // User hasn't voted, add their vote
+            complaint.votes[userEmail] = voteType;
+            if (voteType === 'up') {
+              complaint.upvotes += 1;
+            } else {
+              complaint.downvotes += 1;
+            }
+          }
+        }
+        resolve({ data: complaint });
+      }, 300);
+    });
+  },
+
+  getUserVote: (complaintId, userEmail) => {
+    const complaint = mockComplaints.find(c => c.id === complaintId);
+    return complaint ? complaint.votes[userEmail] || null : null;
   }
 };
 

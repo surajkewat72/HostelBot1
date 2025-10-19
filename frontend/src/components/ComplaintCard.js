@@ -1,13 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { votingAPI } from '../utils/api';
 import '../styles/complaint.css';
 
-const ComplaintCard = ({ complaint, onUpvote, onStatusChange, showActions = false }) => {
-  const [isUpvoted, setIsUpvoted] = useState(false);
+const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false, showVoting = false }) => {
+  const [userVote, setUserVote] = useState(null);
+  const [isVoting, setIsVoting] = useState(false);
+  const userEmail = localStorage.getItem('userEmail');
 
-  const handleUpvote = () => {
-    setIsUpvoted(!isUpvoted);
-    if (onUpvote) {
-      onUpvote(complaint.id, !isUpvoted);
+  useEffect(() => {
+    if (showVoting && userEmail) {
+      const vote = votingAPI.getUserVote(complaint.id, userEmail);
+      setUserVote(vote);
+    }
+  }, [complaint.id, userEmail, showVoting]);
+
+  const handleVote = async (voteType) => {
+    if (!showVoting || !userEmail || isVoting) return;
+    
+    setIsVoting(true);
+    try {
+      await votingAPI.voteComplaint(complaint.id, voteType, userEmail);
+      
+      // Update local state
+      if (userVote === voteType) {
+        // User clicked the same vote, remove it
+        setUserVote(null);
+      } else {
+        // User clicked different vote or no previous vote
+        setUserVote(voteType);
+      }
+      
+      if (onVote) {
+        onVote(complaint.id, voteType);
+      }
+    } catch (error) {
+      console.error('Error voting:', error);
+    } finally {
+      setIsVoting(false);
     }
   };
 
@@ -63,16 +92,33 @@ const ComplaintCard = ({ complaint, onUpvote, onStatusChange, showActions = fals
         <div className="complaint-date">
           Submitted on {formatDate(complaint.date)}
         </div>
-        <div className="complaint-upvotes">
-          <button
-            className={`upvote-btn ${isUpvoted ? 'active' : ''}`}
-            onClick={handleUpvote}
-            title="Upvote this complaint"
-          >
-            👍
-          </button>
-          <span>{complaint.upvotes + (isUpvoted ? 1 : 0)}</span>
-        </div>
+        {showVoting ? (
+          <div className="complaint-voting">
+            <button
+              className={`vote-btn upvote-btn ${userVote === 'up' ? 'active' : ''}`}
+              onClick={() => handleVote('up')}
+              disabled={isVoting}
+              title="Like this complaint"
+            >
+              👍
+            </button>
+            <span className="vote-count">{complaint.upvotes || 0}</span>
+            <button
+              className={`vote-btn downvote-btn ${userVote === 'down' ? 'active' : ''}`}
+              onClick={() => handleVote('down')}
+              disabled={isVoting}
+              title="Dislike this complaint"
+            >
+              👎
+            </button>
+            <span className="vote-count">{complaint.downvotes || 0}</span>
+          </div>
+        ) : (
+          <div className="complaint-upvotes">
+            <span>👍 {complaint.upvotes || 0}</span>
+            <span>👎 {complaint.downvotes || 0}</span>
+          </div>
+        )}
       </div>
 
       {showActions && (

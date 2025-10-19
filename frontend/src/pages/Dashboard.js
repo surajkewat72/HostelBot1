@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ComplaintCard from '../components/ComplaintCard';
-import { complaintsAPI } from '../utils/api';
+import { complaintsAPI, getCurrentUser } from '../utils/api';
 import '../styles/dashboard.css';
 import '../styles/complaint.css';
 
@@ -19,9 +19,7 @@ const Dashboard = () => {
     resolved: 0
   });
 
-  const userType = localStorage.getItem('userType');
-  const userName = localStorage.getItem('userName') || 'Student';
-  const userEmail = localStorage.getItem('userEmail');
+  const { userType, userName, email: userEmail } = getCurrentUser();
 
   useEffect(() => {
     if (userType !== 'student') {
@@ -124,10 +122,17 @@ const Dashboard = () => {
             </button>
             <button 
               className="quick-action-btn" 
-              onClick={() => setActiveTab('complaints')}
+              onClick={() => navigate('/dashboard/my-complaints')}
               style={{ backgroundColor: '#4B4B4B' }}
             >
               📋 View My Complaints
+            </button>
+            <button 
+              className="quick-action-btn" 
+              onClick={() => navigate('/dashboard/all-complaints')}
+              style={{ backgroundColor: '#28A745' }}
+            >
+              🌐 View All Complaints
             </button>
           </div>
 
@@ -141,6 +146,12 @@ const Dashboard = () => {
                 My Complaints
               </button>
               <button
+                className={`tab-button ${activeTab === 'all-complaints' ? 'active' : ''}`}
+                onClick={() => setActiveTab('all-complaints')}
+              >
+                All Complaints
+              </button>
+              <button
                 className={`tab-button ${activeTab === 'submit' ? 'active' : ''}`}
                 onClick={() => setActiveTab('submit')}
               >
@@ -151,53 +162,37 @@ const Dashboard = () => {
             <div className="tab-content">
               {activeTab === 'complaints' && (
                 <div>
-                  <div className="complaint-list-header">
-                    <h2 className="complaint-list-title">My Complaints</h2>
-                    <div className="complaint-filters">
-                      <select
-                        className="filter-select"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                      >
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in progress">In Progress</option>
-                        <option value="resolved">Resolved</option>
-                      </select>
-                    </div>
+                  <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                    <h2 style={{ marginBottom: '12px' }}>My Complaints</h2>
+                    <p style={{ color: '#666666' }}>
+                      View and manage your submitted complaints
+                    </p>
                   </div>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={() => navigate('/dashboard/my-complaints')}
+                    style={{ width: '100%', padding: '16px' }}
+                  >
+                    📋 Go to My Complaints
+                  </button>
+                </div>
+              )}
 
-                  <div className="complaint-list">
-                    {filteredComplaints.length > 0 ? (
-                      filteredComplaints.map(complaint => (
-                        <ComplaintCard
-                          key={complaint.id}
-                          complaint={complaint}
-                          onUpvote={handleUpvote}
-                        />
-                      ))
-                    ) : (
-                      <div className="empty-state">
-                        <div className="empty-state-icon">📝</div>
-                        <div className="empty-state-text">No complaints found</div>
-                        <div className="empty-state-subtext">
-                          {filter === 'all' 
-                            ? "You haven't submitted any complaints yet."
-                            : `No complaints with status "${filter}".`
-                          }
-                        </div>
-                        {filter === 'all' && (
-                          <button 
-                            className="btn btn-primary" 
-                            onClick={handleSubmitComplaint}
-                            style={{ marginTop: '16px' }}
-                          >
-                            Submit Your First Complaint
-                          </button>
-                        )}
-                      </div>
-                    )}
+              {activeTab === 'all-complaints' && (
+                <div>
+                  <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                    <h2 style={{ marginBottom: '12px' }}>All Complaints</h2>
+                    <p style={{ color: '#666666' }}>
+                      View and vote on all hostel complaints from other students
+                    </p>
                   </div>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={() => navigate('/dashboard/all-complaints')}
+                    style={{ width: '100%', padding: '16px' }}
+                  >
+                    🌐 Go to All Complaints
+                  </button>
                 </div>
               )}
 

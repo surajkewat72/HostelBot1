@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getCurrentUser } from '../utils/api';
 import '../styles/dashboard.css';
 
 const Sidebar = ({ userType }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const currentUser = getCurrentUser();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -22,17 +24,16 @@ const Sidebar = ({ userType }) => {
 
   const studentNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: '🏠' },
-    { path: '/dashboard/complaints', label: 'My Complaints', icon: '📋' },
+    { path: '/dashboard/my-complaints', label: 'My Complaints', icon: '📋' },
+    { path: '/dashboard/all-complaints', label: 'All Complaints', icon: '🌐' },
     { path: '/dashboard/submit', label: 'Submit Complaint', icon: '➕' }
   ];
 
   const adminNavItems = [
-    { path: '/admin', label: 'Admin Panel', icon: '⚙️' },
-    { path: '/admin/complaints', label: 'All Complaints', icon: '📋' },
-    { path: '/admin/staff', label: 'Manage Staff', icon: '👥' }
+    { path: '/admin', label: 'Admin Panel', icon: '⚙️' }
   ];
 
-  const navItems = userType === 'admin' ? adminNavItems : studentNavItems;
+  const navItems = currentUser.userType === 'admin' ? adminNavItems : studentNavItems;
 
   return (
     <div className="sidebar">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { complaintsAPI, staffAPI } from '../utils/api';
+import { complaintsAPI, staffAPI, getCurrentUser } from '../utils/api';
 import '../styles/dashboard.css';
 import '../styles/admin.css';
 
@@ -24,7 +24,7 @@ const AdminPanel = () => {
     resolved: 0
   });
 
-  const userType = localStorage.getItem('userType');
+  const { userType } = getCurrentUser();
 
   useEffect(() => {
     if (userType !== 'admin') {

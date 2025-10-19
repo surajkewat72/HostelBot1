@@ -71,26 +71,66 @@
 .complaint-upvotes {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   font-size: 14px;
   color: #666666;
 }
 
-.upvote-btn {
+.complaint-voting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vote-btn {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 16px;
   color: #999999;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.vote-btn:hover {
+  background-color: #F8F9FA;
+  transform: scale(1.1);
+}
+
+.vote-btn.active {
+  color: #F4C542;
+  background-color: #FFF9E6;
+}
+
+.vote-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .upvote-btn:hover {
-  color: #F4C542;
+  color: #28A745;
 }
 
 .upvote-btn.active {
-  color: #F4C542;
+  color: #28A745;
+}
+
+.downvote-btn:hover {
+  color: #DC3545;
+}
+
+.downvote-btn.active {
+  color: #DC3545;
+}
+
+.vote-count {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* Complaint Form Styles */
