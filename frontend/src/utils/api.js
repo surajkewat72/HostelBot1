@@ -255,7 +255,9 @@ export const complaintsAPI = {
           ...complaintData,
           status: 'Pending',
           date: new Date().toISOString().split('T')[0],
-          upvotes: 0
+          upvotes: 0,
+          downvotes: 0,
+          votes: {}
         };
         mockComplaints.unshift(newComplaint);
         resolve({ data: newComplaint });
