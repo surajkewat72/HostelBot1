@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/signup.css';
+import { authAPI } from '../utils/api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,7 +17,8 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@college\.edu$/;
+    // Accept general email formats (no longer restrict to @college.edu)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
@@ -81,19 +83,14 @@ const Signup = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock JWT token
-      const mockToken = `mock-jwt-token-student-${Date.now()}`;
-      localStorage.setItem('token', mockToken);
-      localStorage.setItem('userType', 'student');
-      localStorage.setItem('userEmail', formData.email);
-      localStorage.setItem('userName', formData.name);
-      localStorage.setItem('userRoom', formData.roomNo);
-      localStorage.setItem('userBlock', formData.block);
-      
-      // Navigate to dashboard
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        room: formData.roomNo,
+        block: formData.block
+      };
+      const res = await authAPI.signup(userData);
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup error:', error);
@@ -158,13 +155,13 @@ const Signup = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="email">College Email</label>
+            <label className="form-label" htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               className="form-input"
-              placeholder="your.email@college.edu"
+              placeholder="your.email@example.com"
               value={formData.email}
               onChange={handleInputChange}
             />

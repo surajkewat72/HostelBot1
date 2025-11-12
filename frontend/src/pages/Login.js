@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
+import { authAPI } from '../utils/api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,7 +13,8 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@college\.edu$/;
+    // Accept general email formats (no longer restrict to @college.edu)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
@@ -38,7 +40,7 @@ const Login = () => {
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Email must end with @college.edu';
+      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!formData.password) {
@@ -57,24 +59,23 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock JWT token
-      const mockToken = `mock-jwt-token-${userType}-${Date.now()}`;
-      localStorage.setItem('token', mockToken);
-      localStorage.setItem('userType', userType);
-      localStorage.setItem('userEmail', formData.email);
-      
+      // Call real backend
+      console.log('Attempting login with:', { email: formData.email, userType });
+      const res = await authAPI.login(formData.email, formData.password, userType);
+      console.log('Login response:', res.data);
+      const returnedUser = res.data.user;
+      const type = returnedUser.userType || returnedUser.type || userType;
       // Navigate based on user type
-      if (userType === 'admin') {
+      if (type === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: 'Login failed. Please try again.' });
+      console.error('Error response:', error.response?.data);
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Login failed. Please try again.';
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }
@@ -91,13 +92,13 @@ const Login = () => {
         
         <form className="login-form">
           <div className="form-group">
-            <label className="form-label" htmlFor="email">College Email</label>
+            <label className="form-label" htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               className="form-input"
-              placeholder="your.email@college.edu"
+              placeholder="your.email@example.com"
               value={formData.email}
               onChange={handleInputChange}
             />

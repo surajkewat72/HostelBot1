@@ -25,7 +25,7 @@ const MyComplaints = () => {
   const fetchMyComplaints = async () => {
     try {
       setLoading(true);
-      const response = await complaintsAPI.getComplaints(userType, userEmail);
+      const response = await complaintsAPI.getComplaints(userType);
       setComplaints(response.data);
     } catch (error) {
       console.error('Error fetching complaints:', error);

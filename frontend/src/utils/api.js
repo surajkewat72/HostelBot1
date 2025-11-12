@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-// Base URL for API calls
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Base URL for API calls (frontend can override by setting REACT_APP_API_URL)
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 // Authentication utility
 export const isAuthenticated = () => {
   const token = localStorage.getItem('token');
-  const userType = localStorage.getItem('userType');
-  return !!(token && userType);
+  return !!token;
 };
 
 export const getCurrentUser = () => {
@@ -44,27 +43,24 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors (disabled for mock data)
-// api.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (error) => {
-//     if (error.response?.status === 401) {
-//       // Token expired or invalid
-//       localStorage.removeItem('token');
-//       localStorage.removeItem('userType');
-//       localStorage.removeItem('userEmail');
-//       localStorage.removeItem('userName');
-//       localStorage.removeItem('userRoom');
-//       localStorage.removeItem('userBlock');
-//       window.location.href = '/login';
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+// Response interceptor to handle 401 errors (logout on invalid token)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userType');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userRoom');
+      localStorage.removeItem('userBlock');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-// Mock data for development
+// Keep some mock data as fallback for offline development
 export const mockComplaints = [
   {
     id: 1,
@@ -193,169 +189,93 @@ export const mockStaff = [
 // API functions
 export const authAPI = {
   login: async (email, password, userType) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: {
-            token: `mock-jwt-token-${userType}-${Date.now()}`,
-            user: {
-              email,
-              type: userType,
-              name: userType === 'student' ? 'Student User' : 'Admin User'
-            }
-          }
-        });
-      }, 1000);
-    });
+    // Call backend login
+    const res = await api.post('/auth/login', { email, password });
+    // backend returns { token, user }
+    const { token, user } = res.data;
+    // persist
+    localStorage.setItem('token', token);
+    localStorage.setItem('userType', user.userType || user.type || 'student');
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userName', user.name || '');
+    if (user.room) localStorage.setItem('userRoom', user.room);
+    if (user.block) localStorage.setItem('userBlock', user.block);
+    return res;
   },
 
   signup: async (userData) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: {
-            token: `mock-jwt-token-student-${Date.now()}`,
-            user: {
-              ...userData,
-              type: 'student'
-            }
-          }
-        });
-      }, 1500);
-    });
+    const res = await api.post('/auth/signup', userData);
+    const { token, user } = res.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('userType', user.userType || user.type || 'student');
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userName', user.name || '');
+    if (user.room) localStorage.setItem('userRoom', user.room);
+    if (user.block) localStorage.setItem('userBlock', user.block);
+    return res;
+  },
+
+  me: async () => {
+    const res = await api.get('/auth/me');
+    const user = res.data;
+    // update localStorage
+    localStorage.setItem('userType', user.userType || user.type || 'student');
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userName', user.name || '');
+    if (user.room) localStorage.setItem('userRoom', user.room);
+    if (user.block) localStorage.setItem('userBlock', user.block);
+    return res;
   }
 };
 
 export const complaintsAPI = {
-  getComplaints: async (userType, userEmail) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (userType === 'admin') {
-          resolve({ data: mockComplaints });
-        } else {
-          // Filter complaints for specific student
-          const studentComplaints = mockComplaints.filter(
-            complaint => complaint.student === userEmail
-          );
-          resolve({ data: studentComplaints });
-        }
-      }, 500);
-    });
+  getComplaints: async (userType) => {
+    // For admin, pass ?userType=admin to get all complaints
+    const params = {};
+    if (userType === 'admin') params.userType = 'admin';
+    const res = await api.get('/complaints', { params });
+    return res;
   },
 
   createComplaint: async (complaintData) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newComplaint = {
-          id: mockComplaints.length + 1,
-          ...complaintData,
-          status: 'Pending',
-          date: new Date().toISOString().split('T')[0],
-          upvotes: 0,
-          downvotes: 0,
-          votes: {}
-        };
-        mockComplaints.unshift(newComplaint);
-        resolve({ data: newComplaint });
-      }, 1000);
-    });
+    const res = await api.post('/complaints', complaintData);
+    return res;
   },
 
   updateComplaintStatus: async (complaintId, status) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const complaint = mockComplaints.find(c => c.id === complaintId);
-        if (complaint) {
-          complaint.status = status;
-        }
-        resolve({ data: complaint });
-      }, 500);
-    });
+    const res = await api.put(`/complaints/${complaintId}/status`, { status });
+    return res;
   },
 
   assignComplaint: async (complaintId, staffId) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const complaint = mockComplaints.find(c => c.id === complaintId);
-        const staff = mockStaff.find(s => s.id === staffId);
-        if (complaint && staff) {
-          complaint.assignedTo = staff;
-          complaint.status = 'In Progress';
-        }
-        resolve({ data: complaint });
-      }, 500);
-    });
+    const res = await api.post(`/complaints/${complaintId}/assign`, { staffId });
+    return res;
   }
 };
 
 export const staffAPI = {
   getStaff: async () => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: mockStaff });
-      }, 300);
-    });
+    const res = await api.get('/staff');
+    return res;
   }
 };
 
 export const feedbackAPI = {
   submitFeedback: async (complaintId, rating, comment) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const complaint = mockComplaints.find(c => c.id === complaintId);
-        if (complaint) {
-          complaint.feedback = { rating, comment, date: new Date().toISOString() };
-        }
-        resolve({ data: complaint });
-      }, 500);
-    });
+    const res = await api.post('/feedback', { complaintId, rating, comment });
+    return res;
   }
 };
 
 export const votingAPI = {
-  voteComplaint: async (complaintId, voteType, userEmail) => {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const complaint = mockComplaints.find(c => c.id === complaintId);
-        if (complaint) {
-          // Check if user already voted
-          const existingVote = complaint.votes[userEmail];
-          
-          if (existingVote) {
-            // User already voted, remove their vote
-            delete complaint.votes[userEmail];
-            if (existingVote === 'up') {
-              complaint.upvotes = Math.max(0, complaint.upvotes - 1);
-            } else {
-              complaint.downvotes = Math.max(0, complaint.downvotes - 1);
-            }
-          } else {
-            // User hasn't voted, add their vote
-            complaint.votes[userEmail] = voteType;
-            if (voteType === 'up') {
-              complaint.upvotes += 1;
-            } else {
-              complaint.downvotes += 1;
-            }
-          }
-        }
-        resolve({ data: complaint });
-      }, 300);
-    });
+  voteComplaint: async (complaintId, voteType) => {
+    const res = await api.post(`/complaints/${complaintId}/vote`, { voteType });
+    return res;
   },
 
   getUserVote: (complaintId, userEmail) => {
-    const complaint = mockComplaints.find(c => c.id === complaintId);
-    return complaint ? complaint.votes[userEmail] || null : null;
+    // Not implemented on server; frontend can infer from complaint.votes when fetching complaints
+    return null;
   }
 };
 

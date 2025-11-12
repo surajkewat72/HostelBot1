@@ -1,53 +1,167 @@
-/* Signup Page Styles */
+/* Signup Page Styles - Professional Modern Design */
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  66% {
+    transform: translateY(20px) translateX(-10px);
+  }
+}
+
 .signup-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FFFDF5 0%, #FFF9E6 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating particles effect */
+.signup-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .signup-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  padding: 50px 40px;
   width: 100%;
-  max-width: 500px;
+  max-width: 550px;
   text-align: center;
+  animation: fadeIn 0.6s ease-out;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.signup-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+  border-radius: 24px 24px 0 0;
 }
 
 .signup-logo {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #F4C542, #E6B73A);
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 50%;
-  margin: 0 auto 20px;
+  margin: 0 auto 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
   color: white;
-  box-shadow: 0 4px 16px rgba(244, 197, 66, 0.3);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+  position: relative;
+}
+
+.signup-logo::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.3;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .signup-title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
-  color: #222222;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 8px;
+  animation: slideIn 0.6s ease-out 0.2s backwards;
 }
 
 .signup-subtitle {
   color: #666666;
   margin-bottom: 32px;
   font-size: 16px;
+  animation: slideIn 0.6s ease-out 0.3s backwards;
 }
 
 .signup-form {
   text-align: left;
+  animation: slideIn 0.6s ease-out 0.4s backwards;
 }
 
 .form-row {
@@ -63,46 +177,108 @@
 
 .signup-btn {
   width: 100%;
-  padding: 14px 20px;
-  background-color: #F4C542;
-  color: #222222;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.signup-btn:hover {
-  background-color: #E6B73A;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(244, 197, 66, 0.3);
+.signup-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.signup-btn:active::before {
+  width: 400px;
+  height: 400px;
+}
+
+.signup-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
 }
 
 .signup-btn:disabled {
-  background-color: #CCCCCC;
+  background: linear-gradient(135deg, #CCCCCC 0%, #999999 100%);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  opacity: 0.6;
 }
 
 .signup-links {
   margin-top: 24px;
   text-align: center;
+  animation: slideIn 0.6s ease-out 0.5s backwards;
 }
 
 .signup-link {
-  color: #F4C542;
+  color: #667eea;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.signup-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
 }
 
 .signup-link:hover {
-  color: #E6B73A;
-  text-decoration: underline;
+  color: #764ba2;
+}
+
+.signup-link:hover::after {
+  width: 100%;
+}
+
+/* Loading state */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.signup-btn.loading {
+  pointer-events: none;
+}
+
+.signup-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
 }
 
 /* Responsive Design */
@@ -119,11 +295,18 @@
 
 @media (max-width: 480px) {
   .signup-card {
-    padding: 30px 20px;
+    padding: 40px 24px;
     margin: 10px;
+    border-radius: 20px;
   }
   
   .signup-title {
-    font-size: 24px;
+    font-size: 28px;
+  }
+  
+  .signup-logo {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
   }
 }
