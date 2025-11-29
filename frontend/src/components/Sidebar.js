@@ -62,6 +62,12 @@ const Sidebar = ({ userType }) => {
       </nav>
 
       <div className="sidebar-footer">
+        <button 
+          className="profile-btn" 
+          onClick={() => navigate('/profile')}
+        >
+          👤 Profile
+        </button>
         <button className="logout-btn" onClick={handleLogout}>
           🚪 Logout
         </button>

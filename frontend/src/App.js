@@ -11,6 +11,7 @@ import AllComplaints from './pages/AllComplaints';
 import ComplaintForm from './pages/ComplaintForm';
 import AdminPanel from './pages/AdminPanel';
 import Feedback from './pages/Feedback';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -67,6 +68,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Feedback />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } 
           />

@@ -11,12 +11,26 @@ router.get('/', authenticate, async (req, res) => {
     const { userType, userEmail } = req.query;
 
     if (user.userType === 'admin' || userType === 'admin') {
-      const complaints = await prisma.complaint.findMany({ include: { assignedTo: true, student: true, votes: true, feedback: true } });
+      const complaints = await prisma.complaint.findMany({ 
+        include: { 
+          assignedTo: true, 
+          student: true, 
+          votes: { include: { user: true } }, 
+          feedback: true 
+        } 
+      });
       return res.json(complaints);
     }
 
     // For student, return only their complaints
-    const complaints = await prisma.complaint.findMany({ where: { studentId: user.id }, include: { assignedTo: true, votes: true, feedback: true } });
+    const complaints = await prisma.complaint.findMany({ 
+      where: { studentId: user.id }, 
+      include: { 
+        assignedTo: true, 
+        votes: { include: { user: true } }, 
+        feedback: true 
+      } 
+    });
     res.json(complaints);
   } catch (err) {
     console.error(err);

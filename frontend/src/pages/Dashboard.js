@@ -53,6 +53,11 @@ const Dashboard = () => {
     return complaint.status.toLowerCase() === filter.toLowerCase();
   });
 
+  // Get recent complaints (latest 3)
+  const recentComplaints = [...complaints]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
+
   const handleSubmitComplaint = () => {
     navigate('/dashboard/submit');
   };
@@ -76,97 +81,148 @@ const Dashboard = () => {
       
       <div className="main-content">
         <div className="content-header">
-          <h1 className="content-title">Student Dashboard</h1>
-          <p className="content-subtitle">Welcome back, {userName}!</p>
+          <div className="welcome-banner">
+            <div className="welcome-content">
+              <h1 className="welcome-title">Welcome back, {userName}! 👋</h1>
+            </div>
+          </div>
         </div>
 
         <div className="content-body">
           {/* Stats Cards */}
           <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">📊</div>
-              <div className="stat-number">{stats.total}</div>
-              <div className="stat-label">Total Complaints</div>
+            <div className="stat-card stat-card-animated">
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>📊</div>
+              <div className="stat-info">
+                <div className="stat-label">Total Complaints</div>
+                <div className="stat-value">{stats.total}</div>
+              </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon">⏳</div>
-              <div className="stat-number">{stats.pending}</div>
-              <div className="stat-label">Pending</div>
+            <div className="stat-card stat-card-animated">
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}>⏳</div>
+              <div className="stat-info">
+                <div className="stat-label">Pending</div>
+                <div className="stat-value">{stats.pending}</div>
+              </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon">🔄</div>
-              <div className="stat-number">{stats.inProgress}</div>
-              <div className="stat-label">In Progress</div>
+            <div className="stat-card stat-card-animated">
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>🔄</div>
+              <div className="stat-info">
+                <div className="stat-label">In Progress</div>
+                <div className="stat-value">{stats.inProgress}</div>
+              </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon">✅</div>
-              <div className="stat-number">{stats.resolved}</div>
-              <div className="stat-label">Resolved</div>
+            <div className="stat-card stat-card-animated">
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}>✅</div>
+              <div className="stat-info">
+                <div className="stat-label">Resolved</div>
+                <div className="stat-value">{stats.resolved}</div>
+              </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="quick-actions">
-            <button className="quick-action-btn" onClick={handleSubmitComplaint}>
-              ➕ Submit New Complaint
+          <div className="dashboard-actions-grid">
+            <button 
+              className="action-card action-primary" 
+              onClick={handleSubmitComplaint}
+            >
+              <div className="action-icon">📝</div>
+              <div className="action-content">
+                <div className="action-title">Submit Complaint</div>
+                <div className="action-desc">Report a new issue</div>
+              </div>
+              <div className="action-arrow">→</div>
             </button>
             <button 
-              className="quick-action-btn" 
-              onClick={() => navigate('/dashboard/all-complaints')}
-              style={{ backgroundColor: '#28A745' }}
+              className="action-card action-secondary" 
+              onClick={() => navigate('/dashboard/my-complaints')}
             >
-              🌐 View All Complaints
+              <div className="action-icon">📋</div>
+              <div className="action-content">
+                <div className="action-title">My Complaints</div>
+                <div className="action-desc">Track your issues</div>
+              </div>
+              <div className="action-arrow">→</div>
+            </button>
+            <button 
+              className="action-card action-tertiary" 
+              onClick={() => navigate('/dashboard/all-complaints')}
+            >
+              <div className="action-icon">🌐</div>
+              <div className="action-content">
+                <div className="action-title">All Complaints</div>
+                <div className="action-desc">View & vote on issues</div>
+              </div>
+              <div className="action-arrow">→</div>
             </button>
           </div>
 
-          {/* My Complaints Section */}
-          <div className="complaint-list-header">
-            <h2 className="complaint-list-title">My Complaints</h2>
-            <div className="complaint-filters">
-              <select
-                className="filter-select"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+          {/* Recent Activity Section */}
+          <div className="dashboard-section">
+            <div className="section-header">
+              <h2 className="section-title">📊 Recent Activity</h2>
+              <button 
+                className="section-link"
+                onClick={() => navigate('/dashboard/my-complaints')}
               >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="in progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-              </select>
+                View All →
+              </button>
+            </div>
+            
+            <div className="recent-complaints">
+              {recentComplaints.length > 0 ? (
+                recentComplaints.map(complaint => (
+                  <ComplaintCard
+                    key={complaint.id}
+                    complaint={complaint}
+                    showVoting={false}
+                  />
+                ))
+              ) : (
+                <div className="modern-empty-state">
+                  <div className="empty-state-icon">📝</div>
+                  <div className="empty-state-text">No complaints yet</div>
+                  <div className="empty-state-subtext">
+                    Get started by submitting your first complaint
+                  </div>
+                  <button 
+                    className="btn-submit-modern" 
+                    onClick={handleSubmitComplaint}
+                    style={{ marginTop: '20px' }}
+                  >
+                    <span>+</span>
+                    Submit First Complaint
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Complaints List */}
-          <div className="complaint-list">
-            {filteredComplaints.length > 0 ? (
-              filteredComplaints.map(complaint => (
-                <ComplaintCard
-                  key={complaint.id}
-                  complaint={complaint}
-                  showVoting={false}
-                />
-              ))
-            ) : (
-              <div className="empty-state">
-                <div className="empty-state-icon">📝</div>
-                <div className="empty-state-text">No complaints found</div>
-                <div className="empty-state-subtext">
-                  {filter === 'all' 
-                    ? "You haven't submitted any complaints yet. Click the button below to submit your first complaint."
-                    : `No complaints with status "${filter}".`
-                  }
-                </div>
-                {filter === 'all' && (
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={handleSubmitComplaint}
-                    style={{ marginTop: '16px' }}
-                  >
-                    ➕ Submit Your First Complaint
-                  </button>
-                )}
+          {/* Tips & Info Section */}
+          <div className="info-card" style={{ marginTop: '28px' }}>
+            <div className="info-card-header">
+              <span className="info-icon">💡</span>
+              <h3 className="info-title">Quick Tips</h3>
+            </div>
+            <div className="info-card-body">
+              <div className="info-item">
+                <span className="info-bullet">✓</span>
+                <div>Be specific and detailed when describing your complaint</div>
               </div>
-            )}
+              <div className="info-item">
+                <span className="info-bullet">✓</span>
+                <div>Include photos or videos if possible to help staff understand the issue</div>
+              </div>
+              <div className="info-item">
+                <span className="info-bullet">✓</span>
+                <div>Vote on other students' complaints to help prioritize important issues</div>
+              </div>
+              <div className="info-item">
+                <span className="info-bullet">✓</span>
+                <div>Check your complaint status regularly for updates from staff</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -3,38 +3,70 @@ import { votingAPI } from '../utils/api';
 import '../styles/complaint.css';
 
 const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false, showVoting = false }) => {
+  const [localComplaint, setLocalComplaint] = useState(complaint);
   const [userVote, setUserVote] = useState(null);
   const [isVoting, setIsVoting] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
+  
+  // Debug logging
+  // console.log('ComplaintCard:', { showVoting, userEmail, votes: complaint.votes });
+
+  // Calculate votes from votes array
+  const calculateVotes = (complaint) => {
+    if (!complaint.votes || !Array.isArray(complaint.votes)) {
+      return { upvotes: 0, downvotes: 0 };
+    }
+    const upvotes = complaint.votes.filter(v => v.voteType === 'up').length;
+    const downvotes = complaint.votes.filter(v => v.voteType === 'down').length;
+    return { upvotes, downvotes };
+  };
+
+  // Get current user's vote
+  const getUserVote = (complaint) => {
+    if (!complaint.votes || !Array.isArray(complaint.votes) || !userEmail) {
+      return null;
+    }
+    // Try to find vote by user email - handle different possible user object structures
+    const vote = complaint.votes.find(v => {
+      if (!v.user) return false;
+      // Check if user has email property
+      if (v.user.email === userEmail) return true;
+      // Fallback: check if the vote userId matches (if we had access to userId)
+      return false;
+    });
+    return vote ? vote.voteType : null;
+  };
 
   useEffect(() => {
+    setLocalComplaint(complaint);
     if (showVoting && userEmail) {
-      const vote = votingAPI.getUserVote(complaint.id, userEmail);
+      const vote = getUserVote(complaint);
       setUserVote(vote);
     }
-  }, [complaint.id, userEmail, showVoting]);
+  }, [complaint, userEmail, showVoting]);
 
   const handleVote = async (voteType) => {
-    if (!showVoting || !userEmail || isVoting) return;
+    if (!showVoting) {
+      console.warn('Voting is disabled for this complaint');
+      return;
+    }
+    if (!userEmail) {
+      console.error('User email not found. Please log in again.');
+      return;
+    }
+    if (isVoting) return;
     
     setIsVoting(true);
     try {
-      await votingAPI.voteComplaint(complaint.id, voteType, userEmail);
+      await votingAPI.voteComplaint(complaint.id, voteType);
       
-      // Update local state
-      if (userVote === voteType) {
-        // User clicked the same vote, remove it
-        setUserVote(null);
-      } else {
-        // User clicked different vote or no previous vote
-        setUserVote(voteType);
-      }
-      
+      // Trigger refetch of complaints
       if (onVote) {
-        onVote(complaint.id, voteType);
+        await onVote(complaint.id, voteType);
       }
     } catch (error) {
       console.error('Error voting:', error);
+      alert('Failed to submit vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
@@ -68,29 +100,31 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false,
     }
   };
 
+  const { upvotes, downvotes } = calculateVotes(localComplaint);
+
   return (
     <div className="complaint-card">
       <div className="complaint-header">
-        <h3 className="complaint-title">{complaint.title}</h3>
-        <span className={`status-badge ${getStatusClass(complaint.status)}`}>
-          {complaint.status}
+        <h3 className="complaint-title">{localComplaint.title}</h3>
+        <span className={`status-badge ${getStatusClass(localComplaint.status)}`}>
+          {localComplaint.status}
         </span>
       </div>
 
       <div className="complaint-meta">
-        <span className="complaint-category">{complaint.category}</span>
-        <span>Room: {complaint.room}</span>
-        <span>Block: {complaint.block}</span>
-        {complaint.assignedTo && (
-          <span>Assigned to: {complaint.assignedTo.name}</span>
+        <span className="complaint-category">{localComplaint.category}</span>
+        <span>Room: {localComplaint.room}</span>
+        <span>Block: {localComplaint.block}</span>
+        {localComplaint.assignedTo && (
+          <span>Assigned to: {localComplaint.assignedTo.name}</span>
         )}
       </div>
 
-      <p className="complaint-description">{complaint.description}</p>
+      <p className="complaint-description">{localComplaint.description}</p>
 
       <div className="complaint-footer">
         <div className="complaint-date">
-          Submitted on {formatDate(complaint.date)}
+          Submitted on {formatDate(localComplaint.date)}
         </div>
         {showVoting ? (
           <div className="complaint-voting">
@@ -102,7 +136,7 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false,
             >
               👍
             </button>
-            <span className="vote-count">{complaint.upvotes || 0}</span>
+            <span className="vote-count">{upvotes}</span>
             <button
               className={`vote-btn downvote-btn ${userVote === 'down' ? 'active' : ''}`}
               onClick={() => handleVote('down')}
@@ -111,12 +145,12 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false,
             >
               👎
             </button>
-            <span className="vote-count">{complaint.downvotes || 0}</span>
+            <span className="vote-count">{downvotes}</span>
           </div>
         ) : (
           <div className="complaint-upvotes">
-            <span>👍 {complaint.upvotes || 0}</span>
-            <span>👎 {complaint.downvotes || 0}</span>
+            <span>👍 {upvotes}</span>
+            <span>👎 {downvotes}</span>
           </div>
         )}
       </div>

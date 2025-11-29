@@ -271,11 +271,6 @@ export const votingAPI = {
   voteComplaint: async (complaintId, voteType) => {
     const res = await api.post(`/complaints/${complaintId}/vote`, { voteType });
     return res;
-  },
-
-  getUserVote: (complaintId, userEmail) => {
-    // Not implemented on server; frontend can infer from complaint.votes when fetching complaints
-    return null;
   }
 };
 
