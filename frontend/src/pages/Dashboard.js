@@ -18,7 +18,7 @@ const Dashboard = () => {
     resolved: 0
   });
 
-  const { userType, userName, email: userEmail } = getCurrentUser();
+  const { userType, name: userName, email: userEmail } = getCurrentUser();
 
   useEffect(() => {
     if (userType !== 'student') {
