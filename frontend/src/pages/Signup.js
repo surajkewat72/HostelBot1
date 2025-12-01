@@ -56,7 +56,7 @@ const Signup = () => {
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Email must end with @college.edu';
+      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!formData.password) {
@@ -90,11 +90,15 @@ const Signup = () => {
         room: formData.roomNo,
         block: formData.block
       };
+      console.log('Attempting signup with:', { email: formData.email, name: formData.name });
       const res = await authAPI.signup(userData);
+      console.log('Signup successful:', res.data);
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup error:', error);
-      setErrors({ general: 'Signup failed. Please try again.' });
+      console.error('Error response:', error.response?.data);
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Signup failed. Please try again.';
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }

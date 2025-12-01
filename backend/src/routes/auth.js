@@ -12,7 +12,7 @@ router.post('/signup', async (req, res) => {
     if (!name || !email || !password) return res.status(400).json({ error: 'Missing required fields' });
 
     const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) return res.status(400).json({ error: 'Email already registered' });
+    if (existing) return res.status(400).json({ error: 'This email is already registered. Please use a different email or login.' });
 
     const hash = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { name, email, password: hash, room, block, userType: 'student' } });
@@ -32,10 +32,10 @@ router.post('/login', async (req, res) => {
     if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+    if (!user) return res.status(400).json({ error: 'No account found with this email. Please check your email or sign up.' });
 
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(400).json({ error: 'Invalid credentials' });
+    if (!ok) return res.status(400).json({ error: 'Incorrect password. Please try again.' });
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user.id, email: user.email, name: user.name, userType: user.userType, room: user.room, block: user.block } });

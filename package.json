@@ -1,0 +1,31 @@
+{
+  "name": "hostelbot1",
+  "version": "1.0.0",
+  "description": "A full-stack web application for managing hostel complaints with voting, staff assignment, and feedback features.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm start",
+    "dev": "./start-dev.sh",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "mysql-start": "mysql.server start || sudo /usr/local/mysql/support-files/mysql.server start",
+    "mysql-stop": "mysql.server stop || sudo /usr/local/mysql/support-files/mysql.server stop",
+    "mysql-status": "pgrep -x mysqld > /dev/null && echo 'MySQL is running' || echo 'MySQL is NOT running'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surajkewat72/HostelBot1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/surajkewat72/HostelBot1/issues"
+  },
+  "homepage": "https://github.com/surajkewat72/HostelBot1#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
