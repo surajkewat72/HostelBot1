@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background -->
+  <circle cx="16" cy="16" r="15" fill="#F4C542"/>
+  
+  <!-- Building -->
+  <rect x="8" y="10" width="16" height="14" fill="#FFFFFF" rx="1"/>
+  
+  <!-- Roof -->
+  <path d="M 6 10 L 16 5 L 26 10 Z" fill="#764BA2"/>
+  
+  <!-- Windows -->
+  <rect x="10" y="12" width="3" height="3" fill="#667EEA"/>
+  <rect x="19" y="12" width="3" height="3" fill="#667EEA"/>
+  <rect x="10" y="17" width="3" height="3" fill="#667EEA"/>
+  <rect x="19" y="17" width="3" height="3" fill="#667EEA"/>
+  
+  <!-- Door -->
+  <rect x="14" y="19" width="4" height="5" fill="#764BA2"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="95" fill="#F4C542"/>
+  
+  <!-- Building Shape -->
+  <rect x="50" y="60" width="100" height="90" fill="#FFFFFF" rx="5"/>
+  
+  <!-- Roof -->
+  <path d="M 40 60 L 100 30 L 160 60 Z" fill="#764BA2"/>
+  
+  <!-- Windows -->
+  <rect x="65" y="75" width="20" height="20" fill="#667EEA" rx="2"/>
+  <rect x="115" y="75" width="20" height="20" fill="#667EEA" rx="2"/>
+  <rect x="65" y="105" width="20" height="20" fill="#667EEA" rx="2"/>
+  <rect x="115" y="105" width="20" height="20" fill="#667EEA" rx="2"/>
+  
+  <!-- Door -->
+  <rect x="90" y="120" width="20" height="30" fill="#764BA2" rx="2"/>
+  <circle cx="105" cy="135" r="2" fill="#F4C542"/>
+  
+  <!-- Chimney -->
+  <rect x="125" y="40" width="10" height="20" fill="#764BA2"/>
+</svg>
