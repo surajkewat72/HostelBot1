@@ -193,25 +193,56 @@ export const authAPI = {
     const res = await api.post('/auth/login', { email, password });
     // backend returns { token, user }
     const { token, user } = res.data;
-    // persist
-    localStorage.setItem('token', token);
-    localStorage.setItem('userType', user.userType || user.type || 'student');
-    localStorage.setItem('userEmail', user.email);
-    localStorage.setItem('userName', user.name || '');
-    if (user.room) localStorage.setItem('userRoom', user.room);
-    if (user.block) localStorage.setItem('userBlock', user.block);
+    
+    // Validate user object
+    if (typeof user !== 'object' || !user) {
+      throw new Error('Invalid user data received');
+    }
+    
+    // Clear any existing data first
+    localStorage.removeItem('token');
+    localStorage.removeItem('userType');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userRoom');
+    localStorage.removeItem('userBlock');
+    
+    // Store strings only - never objects
+    localStorage.setItem('token', String(token));
+    localStorage.setItem('userType', String(user.userType || 'student'));
+    localStorage.setItem('userEmail', String(user.email || ''));
+    localStorage.setItem('userName', String(user.name || ''));
+    if (user.room) localStorage.setItem('userRoom', String(user.room));
+    if (user.block) localStorage.setItem('userBlock', String(user.block));
+    
     return res;
   },
 
   signup: async (userData) => {
     const res = await api.post('/auth/signup', userData);
     const { token, user } = res.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('userType', user.userType || user.type || 'student');
-    localStorage.setItem('userEmail', user.email);
-    localStorage.setItem('userName', user.name || '');
-    if (user.room) localStorage.setItem('userRoom', user.room);
-    if (user.block) localStorage.setItem('userBlock', user.block);
+    
+    // Validate user object
+    if (typeof user !== 'object' || !user) {
+      throw new Error('Invalid user data received');
+    }
+    
+    // Clear any existing data first
+    localStorage.removeItem('token');
+    localStorage.removeItem('userType');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userRoom');
+    localStorage.removeItem('userBlock');
+    
+    // Store strings only - never objects
+    localStorage.setItem('token', String(token));
+    localStorage.setItem('userType', String(user.userType || 'student'));
+    localStorage.setItem('userEmail', String(user.email || ''));
+    localStorage.setItem('userName', String(user.name || ''));
+    if (user.room) localStorage.setItem('userRoom', String(user.room));
+    if (user.block) localStorage.setItem('userBlock', String(user.block));
+    
     return res;
   },
 

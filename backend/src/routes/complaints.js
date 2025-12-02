@@ -14,8 +14,17 @@ router.get('/', authenticate, async (req, res) => {
       const complaints = await prisma.complaint.findMany({ 
         include: { 
           assignedTo: true, 
-          student: true, 
-          votes: { include: { user: true } }, 
+          student: { 
+            select: { 
+              id: true, 
+              name: true, 
+              email: true, 
+              userType: true, 
+              room: true, 
+              block: true 
+            } 
+          }, 
+          votes: { include: { user: { select: { id: true, name: true, email: true } } } }, 
           feedback: true 
         } 
       });
@@ -27,7 +36,7 @@ router.get('/', authenticate, async (req, res) => {
       where: { studentId: user.id }, 
       include: { 
         assignedTo: true, 
-        votes: { include: { user: true } }, 
+        votes: { include: { user: { select: { id: true, name: true, email: true } } } }, 
         feedback: true 
       } 
     });
@@ -44,15 +53,29 @@ router.post('/', authenticate, async (req, res) => {
     const { title, description, category, imageUrl, room, block } = req.body;
     if (!title || !description || !category) return res.status(400).json({ error: 'Missing fields' });
 
-    const complaint = await prisma.complaint.create({ data: {
-      title,
-      description,
-      category,
-      imageUrl,
-      room,
-      block,
-      studentId: req.user.id
-    }, include: { student: true } });
+    const complaint = await prisma.complaint.create({ 
+      data: {
+        title,
+        description,
+        category,
+        imageUrl,
+        room,
+        block,
+        studentId: req.user.id
+      }, 
+      include: { 
+        student: { 
+          select: { 
+            id: true, 
+            name: true, 
+            email: true, 
+            userType: true, 
+            room: true, 
+            block: true 
+          } 
+        } 
+      } 
+    });
 
     res.json(complaint);
   } catch (err) {

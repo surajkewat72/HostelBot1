@@ -11,7 +11,8 @@ const Signup = () => {
     block: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    userType: 'student'
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -88,17 +89,36 @@ const Signup = () => {
         email: formData.email,
         password: formData.password,
         room: formData.roomNo,
-        block: formData.block
+        block: formData.block,
+        userType: formData.userType
       };
-      console.log('Attempting signup with:', { email: formData.email, name: formData.name });
+      console.log('Attempting signup with:', { email: formData.email, name: formData.name, userType: formData.userType });
       const res = await authAPI.signup(userData);
-      console.log('Signup successful:', res.data);
-      navigate('/dashboard');
+      console.log('Signup successful');
+      
+      // Small delay to ensure localStorage is updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Navigate based on user type
+      if (formData.userType === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (error) {
       console.error('Signup error:', error);
       console.error('Error response:', error.response?.data);
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Signup failed. Please try again.';
-      setErrors({ general: errorMessage });
+      let errorMessage = 'Signup failed. Please try again.';
+      
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setErrors({ general: String(errorMessage) });
     } finally {
       setIsLoading(false);
     }
@@ -126,6 +146,21 @@ const Signup = () => {
               onChange={handleInputChange}
             />
             {errors.name && <div className="error-message">{errors.name}</div>}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="userType">Account Type</label>
+            <select
+              id="userType"
+              name="userType"
+              className="form-input"
+              value={formData.userType}
+              onChange={handleInputChange}
+              style={{ cursor: 'pointer' }}
+            >
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
 
           <div className="form-row">

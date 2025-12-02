@@ -237,9 +237,9 @@ const AdminPanel = () => {
                     <td className="complaint-id">#{complaint.id}</td>
                     <td>{formatDate(complaint.date)}</td>
                     <td className="complaint-student">
-                      <div>{complaint.student}</div>
+                      <div>{complaint.student?.email || complaint.student?.name || 'Unknown'}</div>
                       <div style={{ fontSize: '12px', color: '#999' }}>
-                        Room {complaint.room}, Block {complaint.block}
+                        Room {complaint.room || complaint.student?.room || 'N/A'}, Block {complaint.block || complaint.student?.block || 'N/A'}
                       </div>
                     </td>
                     <td>{complaint.category}</td>
