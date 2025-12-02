@@ -11,6 +11,16 @@ const MyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [editingComplaint, setEditingComplaint] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    room: '',
+    block: '',
+    imageUrl: ''
+  });
 
   const { userType, email: userEmail } = getCurrentUser();
 
@@ -32,6 +42,54 @@ const MyComplaints = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditComplaint = (complaint) => {
+    setEditingComplaint(complaint);
+    setEditFormData({
+      title: complaint.title,
+      description: complaint.description,
+      category: complaint.category,
+      room: complaint.room,
+      block: complaint.block,
+      imageUrl: complaint.imageUrl || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateComplaint = async (e) => {
+    e.preventDefault();
+    try {
+      await complaintsAPI.updateComplaint(editingComplaint.id, editFormData);
+      alert('Complaint updated successfully!');
+      setShowEditModal(false);
+      setEditingComplaint(null);
+      fetchMyComplaints(); // Refresh the list
+    } catch (error) {
+      console.error('Error updating complaint:', error);
+      alert(error.response?.data?.error || 'Failed to update complaint. Please try again.');
+    }
+  };
+
+  const handleDeleteComplaint = async (complaintId) => {
+    if (window.confirm('Are you sure you want to delete this complaint? This action cannot be undone.')) {
+      try {
+        await complaintsAPI.deleteComplaint(complaintId);
+        alert('Complaint deleted successfully!');
+        fetchMyComplaints(); // Refresh the list
+      } catch (error) {
+        console.error('Error deleting complaint:', error);
+        alert(error.response?.data?.error || 'Failed to delete complaint. Please try again.');
+      }
+    }
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const filteredComplaints = complaints.filter(complaint => {
@@ -144,6 +202,9 @@ const MyComplaints = () => {
                     key={complaint.id}
                     complaint={complaint}
                     showVoting={false}
+                    showStudentActions={true}
+                    onEdit={handleEditComplaint}
+                    onDelete={handleDeleteComplaint}
                   />
                 ))
               ) : (
@@ -196,6 +257,109 @@ const MyComplaints = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {showEditModal && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Complaint</h2>
+              <button className="modal-close" onClick={() => setShowEditModal(false)}>×</button>
+            </div>
+            <form onSubmit={handleUpdateComplaint} className="edit-complaint-form">
+              <div className="form-group">
+                <label>Title *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={editFormData.title}
+                  onChange={handleEditFormChange}
+                  required
+                  placeholder="Enter complaint title"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Category *</label>
+                <select
+                  name="category"
+                  value={editFormData.category}
+                  onChange={handleEditFormChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Electricity">Electricity</option>
+                  <option value="Water">Water</option>
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Mess">Mess</option>
+                  <option value="Internet">Internet</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Room Number *</label>
+                  <input
+                    type="text"
+                    name="room"
+                    value={editFormData.room}
+                    onChange={handleEditFormChange}
+                    required
+                    placeholder="e.g., 101"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Block *</label>
+                  <input
+                    type="text"
+                    name="block"
+                    value={editFormData.block}
+                    onChange={handleEditFormChange}
+                    required
+                    placeholder="e.g., A"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Description *</label>
+                <textarea
+                  name="description"
+                  value={editFormData.description}
+                  onChange={handleEditFormChange}
+                  required
+                  rows="4"
+                  placeholder="Describe the issue in detail"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Image URL (Optional)</label>
+                <input
+                  type="text"
+                  name="imageUrl"
+                  value={editFormData.imageUrl}
+                  onChange={handleEditFormChange}
+                  placeholder="Enter image URL if available"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Update Complaint
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

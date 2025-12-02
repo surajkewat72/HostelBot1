@@ -114,6 +114,74 @@ router.post('/:id/assign', authenticate, async (req, res) => {
   }
 });
 
+// Update complaint (only by owner)
+router.put('/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, category, imageUrl, room, block } = req.body;
+    const complaintId = parseInt(id);
+
+    // Check if complaint exists and belongs to user
+    const complaint = await prisma.complaint.findUnique({ where: { id: complaintId } });
+    if (!complaint) {
+      return res.status(404).json({ error: 'Complaint not found' });
+    }
+    if (complaint.studentId !== req.user.id && req.user.userType !== 'admin') {
+      return res.status(403).json({ error: 'You can only edit your own complaints' });
+    }
+
+    const updated = await prisma.complaint.update({
+      where: { id: complaintId },
+      data: { title, description, category, imageUrl, room, block },
+      include: {
+        student: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            userType: true,
+            room: true,
+            block: true
+          }
+        },
+        votes: { include: { user: { select: { id: true, name: true, email: true } } } }
+      }
+    });
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Delete complaint (only by owner)
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const complaintId = parseInt(id);
+
+    // Check if complaint exists and belongs to user
+    const complaint = await prisma.complaint.findUnique({ where: { id: complaintId } });
+    if (!complaint) {
+      return res.status(404).json({ error: 'Complaint not found' });
+    }
+    if (complaint.studentId !== req.user.id && req.user.userType !== 'admin') {
+      return res.status(403).json({ error: 'You can only delete your own complaints' });
+    }
+
+    // Delete related votes and feedback first
+    await prisma.vote.deleteMany({ where: { complaintId } });
+    await prisma.feedback.deleteMany({ where: { complaintId } });
+    
+    // Delete the complaint
+    await prisma.complaint.delete({ where: { id: complaintId } });
+    res.json({ message: 'Complaint deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Vote (toggle)
 router.post('/:id/vote', authenticate, async (req, res) => {
   try {

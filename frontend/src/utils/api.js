@@ -273,6 +273,16 @@ export const complaintsAPI = {
     return res;
   },
 
+  updateComplaint: async (complaintId, complaintData) => {
+    const res = await api.put(`/complaints/${complaintId}`, complaintData);
+    return res;
+  },
+
+  deleteComplaint: async (complaintId) => {
+    const res = await api.delete(`/complaints/${complaintId}`);
+    return res;
+  },
+
   updateComplaintStatus: async (complaintId, status) => {
     const res = await api.put(`/complaints/${complaintId}/status`, { status });
     return res;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { votingAPI } from '../utils/api';
 import '../styles/complaint.css';
 
-const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false, showVoting = false }) => {
+const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, showActions = false, showVoting = false, showStudentActions = false }) => {
   const [localComplaint, setLocalComplaint] = useState(complaint);
   const [userVote, setUserVote] = useState(null);
   const [isVoting, setIsVoting] = useState(false);
@@ -185,6 +185,27 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, showActions = false,
                 Reopen
               </button>
             )}
+          </div>
+        </div>
+      )}
+
+      {showStudentActions && (
+        <div className="complaint-actions" style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #E6E6E6' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              className="btn btn-outline"
+              onClick={() => onEdit && onEdit(complaint)}
+              style={{ fontSize: '12px', padding: '6px 12px', background: '#4A90E2', color: 'white', border: 'none' }}
+            >
+              ✏️ Edit
+            </button>
+            <button
+              className="btn btn-outline"
+              onClick={() => onDelete && onDelete(complaint.id)}
+              style={{ fontSize: '12px', padding: '6px 12px', background: '#E74C3C', color: 'white', border: 'none' }}
+            >
+              🗑️ Delete
+            </button>
           </div>
         </div>
       )}
