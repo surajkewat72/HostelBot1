@@ -6,37 +6,38 @@ cd "$(dirname "$0")"
 echo "🚀 Starting HostelBot Project..."
 echo ""
 
-# Check and start MySQL if not running
-if ! pgrep -x "mysqld" > /dev/null; then
-    echo "⚠️  MySQL is not running. Starting MySQL..."
+# Check and start PostgreSQL if not running
+if ! pgrep -x "postgres" > /dev/null; then
+    echo "⚠️  PostgreSQL is not running. Starting PostgreSQL..."
     
-    # Try different methods to start MySQL
-    if command -v mysql.server &> /dev/null; then
-        mysql.server start
-    elif [ -f /usr/local/mysql/support-files/mysql.server ]; then
-        sudo /usr/local/mysql/support-files/mysql.server start
-    elif command -v brew &> /dev/null; then
-        brew services start mysql
+    # Try different methods to start PostgreSQL
+    if command -v brew &> /dev/null; then
+        brew services start postgresql@14
     else
-        echo "❌ Could not start MySQL automatically."
-        echo "Please start MySQL manually and run this script again."
+        echo "❌ Could not start PostgreSQL automatically."
+        echo "Please start PostgreSQL manually and run this script again."
         exit 1
     fi
     
-    echo "⏳ Waiting for MySQL to start..."
-    sleep 5
+    echo "⏳ Waiting for PostgreSQL to start..."
+    sleep 3
 else
-    echo "✅ MySQL is already running"
+    echo "✅ PostgreSQL is already running"
 fi
 
-# Test database connection
+# Test database connection and create database if it doesn't exist
 echo "🔍 Testing database connection..."
-if mysql -u root -p'@suraj7654' -e "USE HostelBot;" 2>/dev/null; then
-    echo "✅ Database connection successful"
+if psql -U $USER -d postgres -lqt | cut -d \| -f 1 | grep -qw HostelBot; then
+    echo "✅ Database 'HostelBot' exists"
 else
-    echo "❌ Database connection failed!"
-    echo "Please check your MySQL credentials and database."
-    exit 1
+    echo "📦 Creating database 'HostelBot'..."
+    createdb -U $USER HostelBot
+    if [ $? -eq 0 ]; then
+        echo "✅ Database created successfully"
+    else
+        echo "❌ Failed to create database"
+        exit 1
+    fi
 fi
 
 # Kill any existing servers

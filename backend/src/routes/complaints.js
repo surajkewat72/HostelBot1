@@ -192,24 +192,37 @@ router.post('/:id/vote', authenticate, async (req, res) => {
     const complaintId = parseInt(id);
     const userId = req.user.id;
 
-    const existing = await prisma.vote.findUnique({ where: { userId_complaintId: { userId, complaintId } } }).catch(()=>null);
+    // Check if user has already voted
+    const existing = await prisma.vote.findFirst({ 
+      where: { 
+        userId: userId, 
+        complaintId: complaintId 
+      } 
+    });
 
     if (existing) {
-      // If same voteType -> remove vote, else update
+      // If same voteType -> remove vote (toggle off)
       if (existing.voteType === voteType) {
         await prisma.vote.delete({ where: { id: existing.id } });
         return res.json({ message: 'Vote removed' });
       } else {
-        const updated = await prisma.vote.update({ where: { id: existing.id }, data: { voteType } });
+        // Different voteType -> update vote
+        const updated = await prisma.vote.update({ 
+          where: { id: existing.id }, 
+          data: { voteType } 
+        });
         return res.json(updated);
       }
     }
 
-    const created = await prisma.vote.create({ data: { voteType, userId, complaintId } });
+    // No existing vote -> create new vote
+    const created = await prisma.vote.create({ 
+      data: { voteType, userId, complaintId } 
+    });
     res.json(created);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Vote error:', err);
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
 });
 

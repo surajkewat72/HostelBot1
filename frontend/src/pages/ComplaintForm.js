@@ -158,24 +158,28 @@ const ComplaintForm = () => {
     setIsLoading(true);
     
     try {
-      const userEmail = localStorage.getItem('userEmail');
       const userRoom = localStorage.getItem('userRoom');
       const userBlock = localStorage.getItem('userBlock');
 
+      // Prepare complaint data (backend gets studentId from JWT token)
       const complaintData = {
-        ...formData,
-        student: userEmail,
-        room: userRoom,
-        block: userBlock
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        room: userRoom || null,
+        block: userBlock || null,
+        imageUrl: null // For now, set to null until we implement image upload
       };
 
       await complaintsAPI.createComplaint(complaintData);
       
-      // Navigate back to dashboard
+      // Show success message and navigate
+      alert('Complaint submitted successfully!');
       navigate('/dashboard');
     } catch (error) {
       console.error('Error creating complaint:', error);
-      setErrors({ general: 'Failed to submit complaint. Please try again.' });
+      const errorMessage = error.response?.data?.error || 'Failed to submit complaint. Please try again.';
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }
