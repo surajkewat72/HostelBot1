@@ -34,7 +34,6 @@ const Dashboard = () => {
       const response = await complaintsAPI.getComplaints(userType);
       setComplaints(response.data);
       
-      // Calculate stats
       const total = response.data.length;
       const pending = response.data.filter(c => c.status === 'Pending').length;
       const inProgress = response.data.filter(c => c.status === 'In Progress').length;
@@ -42,25 +41,21 @@ const Dashboard = () => {
       
       setStats({ total, pending, inProgress, resolved });
     } catch (error) {
-      console.error('Error fetching complaints:', error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredComplaints = complaints.filter(complaint => {
-    if (filter === 'all') return true;
-    return complaint.status.toLowerCase() === filter.toLowerCase();
-  });
+  const filteredComplaints = filter === 'all' 
+    ? complaints 
+    : complaints.filter(c => c.status.toLowerCase() === filter.toLowerCase());
 
-  // Get recent complaints (latest 3)
   const recentComplaints = [...complaints]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
 
-  const handleSubmitComplaint = () => {
-    navigate('/dashboard/submit');
-  };
+  const handleSubmitComplaint = () => navigate('/dashboard/submit');
 
   if (loading) {
     return (

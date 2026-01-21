@@ -26,58 +26,40 @@ const AllComplaints = () => {
   const fetchAllComplaints = async () => {
     try {
       setLoading(true);
-      // Get all complaints (not just user's own)
-      const response = await complaintsAPI.getComplaints('admin'); // Use admin to get all complaints
+      const response = await complaintsAPI.getComplaints('admin');
       setComplaints(response.data);
     } catch (error) {
-      console.error('Error fetching complaints:', error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVote = async (complaintId, voteType) => {
-    // Refetch complaints to get updated vote counts
+  const handleVote = async () => {
     try {
       const response = await complaintsAPI.getComplaints('admin');
       setComplaints(response.data);
     } catch (error) {
-      console.error('Error refreshing complaints:', error);
+      console.error(error);
     }
   };
 
-  // Helper function to calculate votes
   const calculateVotes = (complaint) => {
-    if (!complaint.votes || !Array.isArray(complaint.votes)) {
-      return { upvotes: 0, downvotes: 0 };
-    }
-    const upvotes = complaint.votes.filter(v => v.voteType === 'up').length;
-    const downvotes = complaint.votes.filter(v => v.voteType === 'down').length;
-    return { upvotes, downvotes };
+    if (!complaint.votes?.length) return { upvotes: 0, downvotes: 0 };
+    return {
+      upvotes: complaint.votes.filter(v => v.voteType === 'up').length,
+      downvotes: complaint.votes.filter(v => v.voteType === 'down').length
+    };
   };
 
   const filteredAndSortedComplaints = complaints
-    .filter(complaint => {
-      if (filter === 'all') return true;
-      return complaint.status.toLowerCase() === filter.toLowerCase();
-    })
+    .filter(c => filter === 'all' || c.status.toLowerCase() === filter.toLowerCase())
     .sort((a, b) => {
-      switch (sortBy) {
-        case 'date':
-          return new Date(b.date) - new Date(a.date);
-        case 'upvotes':
-          const aUpvotes = calculateVotes(a).upvotes;
-          const bUpvotes = calculateVotes(b).upvotes;
-          return bUpvotes - aUpvotes;
-        case 'downvotes':
-          const aDownvotes = calculateVotes(a).downvotes;
-          const bDownvotes = calculateVotes(b).downvotes;
-          return bDownvotes - aDownvotes;
-        case 'title':
-          return a.title.localeCompare(b.title);
-        default:
-          return 0;
-      }
+      if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
+      if (sortBy === 'upvotes') return calculateVotes(b).upvotes - calculateVotes(a).upvotes;
+      if (sortBy === 'downvotes') return calculateVotes(b).downvotes - calculateVotes(a).downvotes;
+      if (sortBy === 'title') return a.title.localeCompare(b.title);
+      return 0;
     });
 
   if (loading) {

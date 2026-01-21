@@ -17,60 +17,25 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateEmail = (email) => {
-    // Accept general email formats (no longer restrict to @college.edu)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!formData.roomNo.trim()) {
-      newErrors.roomNo = 'Room number is required';
-    }
-
-    if (!formData.block.trim()) {
-      newErrors.block = 'Block is required';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.roomNo.trim()) newErrors.roomNo = 'Room number is required';
+    if (!formData.block.trim()) newErrors.block = 'Block is required';
+    if (!formData.email) newErrors.email = 'Email is required';
+    else if (!emailRegex.test(formData.email)) newErrors.email = 'Please enter a valid email address';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm your password';
+    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -78,11 +43,9 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
     try {
       const userData = {
         name: formData.name,
@@ -92,33 +55,12 @@ const Signup = () => {
         block: formData.block,
         userType: formData.userType
       };
-      console.log('Attempting signup with:', { email: formData.email, name: formData.name, userType: formData.userType });
-      const res = await authAPI.signup(userData);
-      console.log('Signup successful');
-      
-      // Small delay to ensure localStorage is updated
+      await authAPI.signup(userData);
       await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Navigate based on user type
-      if (formData.userType === 'admin') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
+      navigate(formData.userType === 'admin' ? '/admin' : '/dashboard', { replace: true });
     } catch (error) {
-      console.error('Signup error:', error);
-      console.error('Error response:', error.response?.data);
-      let errorMessage = 'Signup failed. Please try again.';
-      
-      if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      setErrors({ general: String(errorMessage) });
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Signup failed. Please try again.';
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }

@@ -28,23 +28,16 @@ const Feedback = () => {
 
   const fetchComplaint = async () => {
     try {
-      // Mock: Get complaint details
       const response = await complaintsAPI.getComplaints('student', localStorage.getItem('userEmail'));
       const foundComplaint = response.data.find(c => c.id === parseInt(complaintId));
       
-      if (!foundComplaint) {
-        navigate('/dashboard');
-        return;
-      }
-      
-      if (foundComplaint.status !== 'Resolved') {
+      if (!foundComplaint || foundComplaint.status !== 'Resolved') {
         navigate('/dashboard');
         return;
       }
       
       setComplaint(foundComplaint);
     } catch (error) {
-      console.error('Error fetching complaint:', error);
       navigate('/dashboard');
     } finally {
       setLoading(false);
@@ -52,63 +45,33 @@ const Feedback = () => {
   };
 
   const handleRatingClick = (rating) => {
-    setFormData(prev => ({
-      ...prev,
-      rating
-    }));
-    
-    if (errors.rating) {
-      setErrors(prev => ({
-        ...prev,
-        rating: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, rating }));
+    if (errors.rating) setErrors(prev => ({ ...prev, rating: '' }));
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(prev => ({ ...prev, [e.target.name]: '' }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (formData.rating === 0) {
-      newErrors.rating = 'Please provide a rating';
-    }
-
-    if (!formData.comment.trim()) {
-      newErrors.comment = 'Please provide feedback comments';
-    } else if (formData.comment.trim().length < 10) {
-      newErrors.comment = 'Comments must be at least 10 characters';
-    }
-
+    if (formData.rating === 0) newErrors.rating = 'Please provide a rating';
+    if (!formData.comment.trim()) newErrors.comment = 'Please provide feedback comments';
+    else if (formData.comment.trim().length < 10) newErrors.comment = 'Comments must be at least 10 characters';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
     try {
       await feedbackAPI.submitFeedback(complaintId, formData.rating, formData.comment);
       setIsSubmitted(true);
     } catch (error) {
-      console.error('Error submitting feedback:', error);
       setErrors({ general: 'Failed to submit feedback. Please try again.' });
     } finally {
       setIsLoading(false);

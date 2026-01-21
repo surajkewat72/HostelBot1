@@ -5,49 +5,25 @@ import { authAPI } from '../utils/api';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const validateEmail = (email) => {
-    // Accept general email formats (no longer restrict to @college.edu)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
+    if (!formData.email) newErrors.email = 'Email is required';
+    else if (!emailRegex.test(formData.email)) newErrors.email = 'Please enter a valid email address';
 
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -57,25 +33,12 @@ const Login = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
     try {
-      // Call real backend
-      console.log('Attempting login with:', { email: formData.email, userType });
       const res = await authAPI.login(formData.email, formData.password, userType);
-      console.log('Login response:', res.data);
-      const returnedUser = res.data.user;
-      const type = returnedUser.userType || returnedUser.type || userType;
-      // Navigate based on user type
-      if (type === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      const type = res.data.user.userType || userType;
+      navigate(type === 'admin' ? '/admin' : '/dashboard');
     } catch (error) {
-      console.error('Login error:', error);
-      console.error('Error response:', error.response?.data);
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Login failed. Please check your credentials.';
-      setErrors({ general: errorMessage });
+      setErrors({ general: error.response?.data?.error || 'Login failed. Please check your credentials.' });
     } finally {
       setIsLoading(false);
     }

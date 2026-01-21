@@ -9,18 +9,13 @@ const Sidebar = ({ userType }) => {
   const currentUser = getCurrentUser();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userType');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRoom');
-    localStorage.removeItem('userBlock');
+    ['token', 'userType', 'userEmail', 'userName', 'userRoom', 'userBlock'].forEach(key => 
+      localStorage.removeItem(key)
+    );
     navigate('/login');
   };
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const isActive = (path) => location.pathname === path;
 
   const studentNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: '🏠' },

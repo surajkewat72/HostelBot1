@@ -7,65 +7,34 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
   const [userVote, setUserVote] = useState(null);
   const [isVoting, setIsVoting] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
-  
-  // Debug logging
-  // console.log('ComplaintCard:', { showVoting, userEmail, votes: complaint.votes });
 
-  // Calculate votes from votes array
   const calculateVotes = (complaint) => {
-    if (!complaint.votes || !Array.isArray(complaint.votes)) {
-      return { upvotes: 0, downvotes: 0 };
-    }
-    const upvotes = complaint.votes.filter(v => v.voteType === 'up').length;
-    const downvotes = complaint.votes.filter(v => v.voteType === 'down').length;
-    return { upvotes, downvotes };
+    if (!complaint.votes?.length) return { upvotes: 0, downvotes: 0 };
+    return {
+      upvotes: complaint.votes.filter(v => v.voteType === 'up').length,
+      downvotes: complaint.votes.filter(v => v.voteType === 'down').length
+    };
   };
 
-  // Get current user's vote
   const getUserVote = (complaint) => {
-    if (!complaint.votes || !Array.isArray(complaint.votes) || !userEmail) {
-      return null;
-    }
-    // Try to find vote by user email - handle different possible user object structures
-    const vote = complaint.votes.find(v => {
-      if (!v.user) return false;
-      // Check if user has email property
-      if (v.user.email === userEmail) return true;
-      // Fallback: check if the vote userId matches (if we had access to userId)
-      return false;
-    });
-    return vote ? vote.voteType : null;
+    if (!complaint.votes?.length || !userEmail) return null;
+    const vote = complaint.votes.find(v => v.user?.email === userEmail);
+    return vote?.voteType || null;
   };
 
   useEffect(() => {
     setLocalComplaint(complaint);
-    if (showVoting && userEmail) {
-      const vote = getUserVote(complaint);
-      setUserVote(vote);
-    }
+    if (showVoting && userEmail) setUserVote(getUserVote(complaint));
   }, [complaint, userEmail, showVoting]);
 
   const handleVote = async (voteType) => {
-    if (!showVoting) {
-      console.warn('Voting is disabled for this complaint');
-      return;
-    }
-    if (!userEmail) {
-      console.error('User email not found. Please log in again.');
-      return;
-    }
-    if (isVoting) return;
+    if (!showVoting || !userEmail || isVoting) return;
     
     setIsVoting(true);
     try {
       await votingAPI.voteComplaint(complaint.id, voteType);
-      
-      // Trigger refetch of complaints
-      if (onVote) {
-        await onVote(complaint.id, voteType);
-      }
+      if (onVote) await onVote(complaint.id, voteType);
     } catch (error) {
-      console.error('Error voting:', error);
       alert('Failed to submit vote. Please try again.');
     } finally {
       setIsVoting(false);
@@ -73,32 +42,18 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
   };
 
   const getStatusClass = (status) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'status-pending';
-      case 'in progress':
-        return 'status-inprogress';
-      case 'resolved':
-        return 'status-resolved';
-      default:
-        return 'status-pending';
-    }
+    const statusMap = {
+      'pending': 'status-pending',
+      'in progress': 'status-inprogress',
+      'resolved': 'status-resolved'
+    };
+    return statusMap[status.toLowerCase()] || 'status-pending';
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  const formatDate = (dateString) => 
+    new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
-  const handleStatusChange = (newStatus) => {
-    if (onStatusChange) {
-      onStatusChange(complaint.id, newStatus);
-    }
-  };
+  const handleStatusChange = (newStatus) => onStatusChange?.(complaint.id, newStatus);
 
   const { upvotes, downvotes } = calculateVotes(localComplaint);
 

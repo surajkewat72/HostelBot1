@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
-  // create example staff
   const staffData = [
     { name: 'John Maintenance', department: 'Maintenance' },
     { name: 'Sarah Electrician', department: 'Electrical' },
@@ -14,14 +13,12 @@ async function main() {
   ];
 
   for (const s of staffData) {
-    // staff.name is not unique in schema, so use findFirst then create if missing
     const existingStaff = await prisma.staff.findFirst({ where: { name: s.name, department: s.department } });
     if (!existingStaff) {
       await prisma.staff.create({ data: s });
     }
   }
 
-  // create admin user
   const adminEmail = 'admin@college.edu';
   const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (!existing) {

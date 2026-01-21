@@ -4,7 +4,6 @@ const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Get complaints. If userType=admin or authenticated admin -> all complaints
 router.get('/', authenticate, async (req, res) => {
   try {
     const { user } = req;
@@ -31,7 +30,6 @@ router.get('/', authenticate, async (req, res) => {
       return res.json(complaints);
     }
 
-    // For student, return only their complaints
     const complaints = await prisma.complaint.findMany({ 
       where: { studentId: user.id }, 
       include: { 
@@ -47,7 +45,6 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-// Create complaint
 router.post('/', authenticate, async (req, res) => {
   try {
     const { title, description, category, imageUrl, room, block } = req.body;
@@ -84,7 +81,6 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-// Update status
 router.put('/:id/status', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +95,6 @@ router.put('/:id/status', authenticate, async (req, res) => {
   }
 });
 
-// Assign complaint to staff
 router.post('/:id/assign', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -114,7 +109,6 @@ router.post('/:id/assign', authenticate, async (req, res) => {
   }
 });
 
-// Update complaint (only by owner)
 router.put('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -154,7 +148,6 @@ router.put('/:id', authenticate, async (req, res) => {
   }
 });
 
-// Delete complaint (only by owner)
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -169,11 +162,9 @@ router.delete('/:id', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'You can only delete your own complaints' });
     }
 
-    // Delete related votes and feedback first
     await prisma.vote.deleteMany({ where: { complaintId } });
     await prisma.feedback.deleteMany({ where: { complaintId } });
     
-    // Delete the complaint
     await prisma.complaint.delete({ where: { id: complaintId } });
     res.json({ message: 'Complaint deleted successfully' });
   } catch (err) {
@@ -182,7 +173,6 @@ router.delete('/:id', authenticate, async (req, res) => {
   }
 });
 
-// Vote (toggle)
 router.post('/:id/vote', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -192,7 +182,6 @@ router.post('/:id/vote', authenticate, async (req, res) => {
     const complaintId = parseInt(id);
     const userId = req.user.id;
 
-    // Check if user has already voted
     const existing = await prisma.vote.findFirst({ 
       where: { 
         userId: userId, 
@@ -201,12 +190,10 @@ router.post('/:id/vote', authenticate, async (req, res) => {
     });
 
     if (existing) {
-      // If same voteType -> remove vote (toggle off)
       if (existing.voteType === voteType) {
         await prisma.vote.delete({ where: { id: existing.id } });
         return res.json({ message: 'Vote removed' });
       } else {
-        // Different voteType -> update vote
         const updated = await prisma.vote.update({ 
           where: { id: existing.id }, 
           data: { voteType } 
@@ -215,7 +202,6 @@ router.post('/:id/vote', authenticate, async (req, res) => {
       }
     }
 
-    // No existing vote -> create new vote
     const created = await prisma.vote.create({ 
       data: { voteType, userId, complaintId } 
     });

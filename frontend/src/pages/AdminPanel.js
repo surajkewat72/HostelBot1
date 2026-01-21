@@ -45,15 +45,15 @@ const AdminPanel = () => {
       setComplaints(complaintsResponse.data);
       setStaff(staffResponse.data);
       
-      // Calculate stats
-      const total = complaintsResponse.data.length;
-      const pending = complaintsResponse.data.filter(c => c.status === 'Pending').length;
-      const inProgress = complaintsResponse.data.filter(c => c.status === 'In Progress').length;
-      const resolved = complaintsResponse.data.filter(c => c.status === 'Resolved').length;
-      
-      setStats({ total, pending, inProgress, resolved });
+      const data = complaintsResponse.data;
+      setStats({
+        total: data.length,
+        pending: data.filter(c => c.status === 'Pending').length,
+        inProgress: data.filter(c => c.status === 'In Progress').length,
+        resolved: data.filter(c => c.status === 'Resolved').length
+      });
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -62,21 +62,11 @@ const AdminPanel = () => {
   const handleStatusChange = async (complaintId, newStatus) => {
     try {
       await complaintsAPI.updateComplaintStatus(complaintId, newStatus);
-      setComplaints(prev => prev.map(complaint => 
-        complaint.id === complaintId 
-          ? { ...complaint, status: newStatus }
-          : complaint
+      setComplaints(prev => prev.map(c => 
+        c.id === complaintId ? { ...c, status: newStatus } : c
       ));
-      
-      // Update stats
-      const total = complaints.length;
-      const pending = complaints.filter(c => c.status === 'Pending' || (c.id === complaintId && newStatus === 'Pending')).length;
-      const inProgress = complaints.filter(c => c.status === 'In Progress' || (c.id === complaintId && newStatus === 'In Progress')).length;
-      const resolved = complaints.filter(c => c.status === 'Resolved' || (c.id === complaintId && newStatus === 'Resolved')).length;
-      
-      setStats({ total, pending, inProgress, resolved });
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error(error);
     }
   };
 
@@ -86,36 +76,27 @@ const AdminPanel = () => {
     setSelectedStaff(null);
   };
 
-  const handleStaffSelect = (staffMember) => {
-    setSelectedStaff(staffMember);
-  };
-
   const confirmAssignment = async () => {
     if (!selectedStaff || !selectedComplaint) return;
 
     try {
       await complaintsAPI.assignComplaint(selectedComplaint.id, selectedStaff.id);
-      setComplaints(prev => prev.map(complaint => 
-        complaint.id === selectedComplaint.id 
-          ? { ...complaint, assignedTo: selectedStaff, status: 'In Progress' }
-          : complaint
+      setComplaints(prev => prev.map(c => 
+        c.id === selectedComplaint.id 
+          ? { ...c, assignedTo: selectedStaff, status: 'In Progress' }
+          : c
       ));
-      
       setShowAssignModal(false);
       setSelectedComplaint(null);
       setSelectedStaff(null);
     } catch (error) {
-      console.error('Error assigning complaint:', error);
+      console.error(error);
     }
   };
 
-  const filteredComplaints = complaints.filter(complaint => {
-    if (filters.status !== 'all' && complaint.status !== filters.status) {
-      return false;
-    }
-    if (filters.category !== 'all' && complaint.category !== filters.category) {
-      return false;
-    }
+  const filteredComplaints = complaints.filter(c => {
+    if (filters.status !== 'all' && c.status !== filters.status) return false;
+    if (filters.category !== 'all' && c.category !== filters.category) return false;
     return true;
   });
 

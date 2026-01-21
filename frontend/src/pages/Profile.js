@@ -25,7 +25,7 @@ const Profile = () => {
             <div className="profile-header">
               <div className="profile-avatar">
                 <span className="avatar-icon">
-                  {user.userType === 'admin' ? '👨‍💼' : '👤'}
+                  {user.userType === 'admin' ? 'A' : 'U'}
                 </span>
               </div>
               <div className="profile-header-info">

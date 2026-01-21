@@ -10,7 +10,6 @@ const authenticate = async (req, res, next) => {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // attach user
     const user = await prisma.user.findUnique({ where: { id: payload.userId } });
     if (!user) return res.status(401).json({ error: 'User not found' });
     req.user = user;

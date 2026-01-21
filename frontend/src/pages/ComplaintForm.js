@@ -27,54 +27,26 @@ const ComplaintForm = () => {
   ];
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(prev => ({ ...prev, [e.target.name]: '' }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/avi'];
       if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({
-          ...prev,
-          image: 'Please upload a valid image or video file'
-        }));
+        setErrors(prev => ({ ...prev, image: 'Please upload a valid image or video file' }));
         return;
       }
 
-      // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({
-          ...prev,
-          image: 'File size must be less than 5MB'
-        }));
+        setErrors(prev => ({ ...prev, image: 'File size must be less than 5MB' }));
         return;
       }
 
-      setFormData(prev => ({
-        ...prev,
-        image: file
-      }));
-
-      if (errors.image) {
-        setErrors(prev => ({
-          ...prev,
-          image: ''
-        }));
-      }
+      setFormData(prev => ({ ...prev, image: file }));
+      if (errors.image) setErrors(prev => ({ ...prev, image: '' }));
     }
   };
 
@@ -129,71 +101,43 @@ const ComplaintForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.category) {
-      newErrors.category = 'Please select a category';
-    }
-
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
-    } else if (formData.title.trim().length < 5) {
-      newErrors.title = 'Title must be at least 5 characters';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    } else if (formData.description.trim().length < 10) {
-      newErrors.description = 'Description must be at least 10 characters';
-    }
-
+    if (!formData.category) newErrors.category = 'Please select a category';
+    if (!formData.title.trim()) newErrors.title = 'Title is required';
+    else if (formData.title.trim().length < 5) newErrors.title = 'Title must be at least 5 characters';
+    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    else if (formData.description.trim().length < 10) newErrors.description = 'Description must be at least 10 characters';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
     try {
-      const userRoom = localStorage.getItem('userRoom');
-      const userBlock = localStorage.getItem('userBlock');
-
-      // Prepare complaint data (backend gets studentId from JWT token)
       const complaintData = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
-        room: userRoom || null,
-        block: userBlock || null,
-        imageUrl: null // For now, set to null until we implement image upload
+        room: localStorage.getItem('userRoom') || null,
+        block: localStorage.getItem('userBlock') || null,
+        imageUrl: null
       };
 
       await complaintsAPI.createComplaint(complaintData);
-      
-      // Show success message and navigate
       alert('Complaint submitted successfully!');
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error creating complaint:', error);
-      const errorMessage = error.response?.data?.error || 'Failed to submit complaint. Please try again.';
-      setErrors({ general: errorMessage });
+      setErrors({ general: error.response?.data?.error || 'Failed to submit complaint.' });
     } finally {
       setIsLoading(false);
     }
   };
 
   const removeFile = () => {
-    setFormData(prev => ({
-      ...prev,
-      image: null
-    }));
-    setErrors(prev => ({
-      ...prev,
-      image: ''
-    }));
+    setFormData(prev => ({ ...prev, image: null }));
+    setErrors(prev => ({ ...prev, image: '' }));
   };
 
   return (

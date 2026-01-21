@@ -38,7 +38,7 @@ const MyComplaints = () => {
       const response = await complaintsAPI.getComplaints(userType);
       setComplaints(response.data);
     } catch (error) {
-      console.error('Error fetching complaints:', error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -64,45 +64,34 @@ const MyComplaints = () => {
       alert('Complaint updated successfully!');
       setShowEditModal(false);
       setEditingComplaint(null);
-      fetchMyComplaints(); // Refresh the list
+      fetchMyComplaints();
     } catch (error) {
-      console.error('Error updating complaint:', error);
-      alert(error.response?.data?.error || 'Failed to update complaint. Please try again.');
+      alert(error.response?.data?.error || 'Failed to update complaint.');
     }
   };
 
   const handleDeleteComplaint = async (complaintId) => {
-    if (window.confirm('Are you sure you want to delete this complaint? This action cannot be undone.')) {
+    if (window.confirm('Are you sure you want to delete this complaint?')) {
       try {
         await complaintsAPI.deleteComplaint(complaintId);
         alert('Complaint deleted successfully!');
-        fetchMyComplaints(); // Refresh the list
+        fetchMyComplaints();
       } catch (error) {
-        console.error('Error deleting complaint:', error);
-        alert(error.response?.data?.error || 'Failed to delete complaint. Please try again.');
+        alert(error.response?.data?.error || 'Failed to delete complaint.');
       }
     }
   };
 
   const handleEditFormChange = (e) => {
-    const { name, value } = e.target;
-    setEditFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setEditFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const filteredComplaints = complaints.filter(complaint => {
-    if (filter === 'all') return true;
-    return complaint.status.toLowerCase() === filter.toLowerCase();
-  });
+  const filteredComplaints = filter === 'all'
+    ? complaints
+    : complaints.filter(c => c.status.toLowerCase() === filter.toLowerCase());
 
-  // Sort by date (newest first)
-  const sortedComplaints = [...filteredComplaints].sort((a, b) => {
-    return new Date(b.date) - new Date(a.date);
-  });
+  const sortedComplaints = [...filteredComplaints].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Calculate statistics
   const stats = {
     total: complaints.length,
     pending: complaints.filter(c => c.status.toLowerCase() === 'pending').length,

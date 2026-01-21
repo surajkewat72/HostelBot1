@@ -5,7 +5,6 @@ const prisma = require('../prismaClient');
 
 const router = express.Router();
 
-// Signup
 router.post('/signup', async (req, res) => {
   try {
     const { name, email, password, room, block, userType } = req.body;
@@ -38,7 +37,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -68,7 +66,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Get current user from token
 const { authenticate } = require('../middleware/auth');
 router.get('/me', authenticate, async (req, res) => {
   try {
