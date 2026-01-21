@@ -1,25 +1,77 @@
 # HostelBot Backend
 
-This backend uses Express + Prisma + MySQL.
+Server-side API for the Hostel Complaint Management System.
 
-Quick start
+## What This Does
 
-1. Copy `.env.example` to `.env` and set `DATABASE_URL` and `JWT_SECRET`.
-2. From `backend` folder install dependencies: `npm install`.
-3. Generate prisma client: `npx prisma generate`.
-4. Run migrations (or use `prisma migrate dev`): `npx prisma migrate dev --name init`.
-5. Seed initial data: `npm run seed`.
-6. Start server: `npm run dev` (default port 5000).
+This is the backend (server) that:
+- Stores data in a database
+- Handles user authentication
+- Manages complaints, staff, and feedback
+- Provides APIs for the frontend to use
 
-API base: `/api`
+## Technology Used
 
-Endpoints implemented:
-- `POST /api/auth/signup` - create student account
-- `POST /api/auth/login` - login and receive JWT
-- `GET /api/staff` - list staff members
-- `GET /api/complaints` - list complaints (protected)
-- `POST /api/complaints` - create complaint (protected)
-- `PUT /api/complaints/:id/status` - update status (protected)
-- `POST /api/complaints/:id/assign` - assign staff (protected)
-- `POST /api/complaints/:id/vote` - vote up/down (protected)
-- `POST /api/feedback` - submit feedback for resolved complaints (protected)
+- **Node.js + Express** - Web server
+- **Prisma** - Database tool
+- **PostgreSQL** - Database
+- **JWT** - Secure user login
+
+## How to Run
+
+1. **Install packages:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment file:**
+   - Create a `.env` file with:
+   ```
+   DATABASE_URL="your_database_url_here"
+   JWT_SECRET="your_secret_key_here"
+   PORT=5001
+   ```
+
+3. **Set up database:**
+   ```bash
+   npx prisma generate
+   npx prisma migrate dev
+   ```
+
+4. **Add sample data (optional):**
+   ```bash
+   npm run seed
+   ```
+   This creates an admin user: `admin@college.edu` / `admin123`
+
+5. **Start the server:**
+   ```bash
+   npm start
+   ```
+   Server runs on `http://localhost:5001`
+
+## API Endpoints
+
+**Authentication:**
+- `POST /api/auth/signup` - Register new student
+- `POST /api/auth/login` - Login and get token
+
+**Complaints:**
+- `GET /api/complaints` - Get all complaints
+- `POST /api/complaints` - Create new complaint
+- `PUT /api/complaints/:id/status` - Update status
+- `POST /api/complaints/:id/assign` - Assign staff
+- `POST /api/complaints/:id/vote` - Vote on complaint
+
+**Other:**
+- `GET /api/staff` - Get staff list
+- `POST /api/feedback` - Submit feedback
+
+## Database Schema
+
+The database includes tables for:
+- **User** - Students and admins
+- **Complaint** - Submitted complaints
+- **Staff** - Maintenance staff
+- **Vote** - Student votes on complaints
+- **Feedback** - Ratings and comments

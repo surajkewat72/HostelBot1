@@ -1,105 +1,66 @@
-# HostelBot - Hostel Complaint Management System
+# HostelBot Frontend
 
-A modern, responsive React frontend for managing hostel complaints with a clean, minimalist design.
+React-based user interface for the Hostel Complaint Management System.
 
-## 🎯 Features
+## What This Does
 
-### Student Features
-- **User Authentication**: Login/Signup with college email validation
-- **Dashboard**: View complaint statistics and quick actions
-- **Complaint Management**: Submit, view, and track complaints
-- **File Upload**: Support for images and videos
-- **Feedback System**: Rate and comment on resolved complaints
+This is the frontend (user interface) part of HostelBot where students and admins can:
+- Submit and track hostel complaints
+- Vote on important issues
+- Give feedback on resolved complaints
+- Manage complaints (admin only)
 
-### Admin Features
-- **Admin Panel**: Comprehensive complaint management
-- **Staff Assignment**: Assign complaints to staff members
-- **Status Management**: Update complaint status (Pending, In Progress, Resolved)
-- **Filtering**: Filter complaints by status and category
-- **Statistics**: View complaint statistics and trends
+## How to Run
 
-## 🎨 Design System
-
-### Colors
-- **Primary**: #F4C542 (Gold Yellow)
-- **Secondary**: #FFF9E6 (Light Beige)
-- **Background**: #FFFDF5 (Soft Beige)
-- **Text**: #222222 (Dark Gray)
-- **Accent**: #4B4B4B (Medium Gray)
-
-### Typography
-- **Font**: Inter (Google Fonts)
-- **Weights**: 300, 400, 500, 600, 700
-
-### Components
-- **Cards**: Rounded corners (12px), subtle shadows
-- **Buttons**: 8px border radius, smooth hover transitions
-- **Forms**: Clean inputs with focus states
-- **Status Badges**: Color-coded for different states
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd HostelBot1/frontend
-   ```
-
-2. **Install dependencies**
+1. **Install packages:**
    ```bash
    npm install
    ```
 
-3. **Start the development server**
+2. **Start the app:**
    ```bash
    npm start
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:3000`
+3. **Open in browser:** Go to `http://localhost:3000`
 
-### Build for Production
-```bash
-npm run build
-```
+## Key Features
 
-## 📁 Project Structure
+**For Students:**
+- Login/Signup
+- Submit complaints with images
+- Track complaint status
+- Vote on complaints
+- Give feedback
+
+**For Admins:**
+- View all complaints
+- Assign staff to complaints
+- Update complaint status
+- View statistics
+
+## Pages
+
+- **Login/Signup** - User authentication
+- **Dashboard** - Overview of your complaints
+- **Submit Complaint** - Report a new issue
+- **My Complaints** - Track your submissions
+- **All Complaints** - View all complaints (admin)
+- **Admin Panel** - Manage all complaints (admin)
+- **Feedback** - Rate resolved complaints
+- **Profile** - View your information
+
+## Project Folder Structure
 
 ```
 src/
-├── App.js                 # Main app component with routing
-├── index.js              # Entry point
-├── components/           # Reusable components
-│   ├── Navbar.js
-│   ├── Sidebar.js
-│   ├── ComplaintCard.js
-│   └── ProtectedRoute.js
-├── pages/               # Page components
-│   ├── Login.js
-│   ├── Signup.js
-│   ├── Dashboard.js
-│   ├── ComplaintForm.js
-│   ├── AdminPanel.js
-│   └── Feedback.js
-├── styles/              # CSS files
-│   ├── global.css
-│   ├── login.css
-│   ├── signup.css
-│   ├── dashboard.css
-│   ├── complaint.css
-│   ├── admin.css
-│   └── feedback.css
-└── utils/               # Utility functions
-    └── api.js           # API calls and mock data
+├── pages/          # Different pages (Login, Dashboard, etc.)
+├── components/     # Reusable parts (Sidebar, ComplaintCard, etc.)
+├── styles/         # CSS styling files
+└── utils/          # Helper functions (API calls)
 ```
 
-## 🔐 Authentication
+## Authentication
 
 The app uses JWT tokens stored in localStorage for authentication:
 
@@ -110,14 +71,14 @@ The app uses JWT tokens stored in localStorage for authentication:
 - **Student**: Can submit and view their own complaints
 - **Admin**: Can manage all complaints and assign staff
 
-## 📱 Responsive Design
+## Responsive Design
 
 The application is fully responsive and works on:
 - **Desktop**: Full sidebar layout
 - **Tablet**: Collapsible sidebar
 - **Mobile**: Stack layout with touch-friendly controls
 
-## 🎯 Key Pages
+## Key Pages
 
 ### 1. Login Page
 - Clean card-based design
@@ -149,7 +110,7 @@ The application is fully responsive and works on:
 - Success confirmation
 - Navigation back to dashboard
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **React 18**: Frontend framework
 - **React Router DOM**: Client-side routing
@@ -157,14 +118,14 @@ The application is fully responsive and works on:
 - **CSS3**: Styling with custom properties
 - **Google Fonts**: Inter font family
 
-## 📊 Mock Data
+## Mock Data
 
 The application includes comprehensive mock data:
 - 5 sample complaints with different statuses
 - 5 staff members across different departments
 - Realistic complaint categories and descriptions
 
-## 🔧 Customization
+## Customization
 
 ### Adding New Complaint Categories
 Edit the `categories` array in `ComplaintForm.js`:
@@ -189,7 +150,7 @@ Update CSS custom properties in `global.css`:
 }
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Netlify
 1. Build the project: `npm run build`
@@ -204,21 +165,21 @@ Update CSS custom properties in `global.css`:
 2. Add deploy script to package.json
 3. Run: `npm run deploy`
 
-## 📝 License
+## License
 
 This project is created for educational purposes. Feel free to use and modify as needed.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
-## 📞 Support
+## Support
 
 For questions or support, please contact the development team.
 
 ---
 
-**HostelBot** - Making hostel life better, one complaint at a time! 🏠✨
+**HostelBot** - Making hostel life better, one complaint at a time!

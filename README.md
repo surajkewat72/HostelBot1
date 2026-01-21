@@ -1,265 +1,153 @@
-# HostelBot - Hostel Complaint Management System
+# HostelBot
 
-A full-stack web application for managing hostel complaints with voting, staff assignment, and feedback features.
+A simple hostel complaint management system where students can report issues and track their status.
 
-## 🏗️ Tech Stack
+## What is This?
 
-**Frontend:**
-- React 18
-- React Router v6
-- Axios
-- CSS3
+HostelBot helps hostel students:
+- Report problems (broken furniture, plumbing issues, etc.)
+- Track complaint status (pending, in progress, resolved)
+- Vote on important issues
+- Give feedback once problems are fixed
 
-**Backend:**
-- Node.js + Express
-- Prisma ORM
-- MySQL Database
-- JWT Authentication
-- bcrypt for password hashing
+Admins can:
+- View all complaints
+- Assign staff to fix issues
+- Update complaint status
 
-## 📁 Project Structure
+## Technology Used
+
+**Frontend (User Interface):**
+- React - for building the website
+- CSS - for styling
+
+**Backend (Server):**
+- Node.js + Express - web server
+- Prisma - database management
+- PostgreSQL - database
+- JWT - secure login
+
+## Folder Structure
 
 ```
 HostelBot1/
-├── backend/          # Express API server
-│   ├── src/
-│   │   ├── index.js          # Server entry point
-│   │   ├── prismaClient.js   # Prisma client instance
-│   │   ├── middleware/       # Auth middleware
-│   │   └── routes/           # API routes
-│   └── prisma/
-│       ├── schema.prisma     # Database schema
-│       └── seed.js           # Seed data script
-└── frontend/         # React application
-    ├── src/
-    │   ├── App.js            # Main app component
-    │   ├── components/       # Reusable components
-    │   ├── pages/            # Page components
-    │   ├── styles/           # CSS files
-    │   └── utils/            # API utilities
-    └── public/
+├── frontend/        # React website (what users see)
+│   ├── src/pages/       # Different pages
+│   ├── src/components/  # Reusable parts
+│   └── src/styles/      # CSS files
+│
+└── backend/         # Server code
+    ├── src/routes/      # API endpoints
+    ├── prisma/          # Database setup
+    └── src/middleware/  # Authentication
 ```
 
-## 🚀 Quick Start
+## How to Run This Project
 
-### Prerequisites
+### What You Need First
 
-- Node.js (v16 or higher)
-- MySQL (v8 or higher)
-- npm or yarn
+- Node.js installed on your computer
+- PostgreSQL database
+- A code editor (like VS Code)
 
-### Backend Setup
+### Step 1: Start the Backend
 
-1. **Navigate to backend directory:**
-   ```bash
-   cd HostelBot1/backend
-   ```
+Open a terminal and run:
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment:**
-   - Update `.env` file with your MySQL credentials:
-   ```env
-   DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/HostelBot"
-   JWT_SECRET="your_secure_random_secret_key"
-   PORT=5001
-   ```
-
-4. **Generate Prisma client:**
-   ```bash
-   npx prisma generate
-   ```
-
-5. **Run database migrations:**
-   ```bash
-   npx prisma migrate dev --name init
-   ```
-
-6. **Seed initial data (optional - creates admin user and staff):**
-   ```bash
-   npm run seed
-   ```
-   Default admin credentials: `admin@college.edu` / `admin123`
-
-7. **Start the backend server:**
-   ```bash
-   npm start
-   # or for development with auto-reload:
-   npm run dev
-   ```
-   Backend will run on `http://localhost:5001`
-
-### Frontend Setup
-
-1. **Navigate to frontend directory:**
-   ```bash
-   cd HostelBot1/frontend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment (optional):**
-   - The `.env` file is already configured to point to `http://localhost:5001/api`
-   - Modify if your backend runs on a different port
-
-4. **Start the development server:**
-   ```bash
-   npm start
-   ```
-   Frontend will run on `http://localhost:3000`
-
-## 🎯 Features
-
-### Student Features
-- User registration and login
-- Submit complaints with category, description, and optional images
-- View all complaints with voting system
-- Upvote/downvote complaints
-- Track own complaints status
-- Submit feedback for resolved complaints
-
-### Admin Features
-- View all complaints
-- Assign complaints to staff members
-- Update complaint status (Pending → In Progress → Resolved)
-- View feedback and ratings
-
-### Authentication
-- JWT-based authentication
-- Protected routes for logged-in users
-- Role-based access control (student/admin)
-
-## 🔑 API Endpoints
-
-### Authentication
-- `POST /api/auth/signup` - Register new student
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user
-
-### Complaints
-- `GET /api/complaints` - List complaints
-- `POST /api/complaints` - Create complaint
-- `PUT /api/complaints/:id/status` - Update status
-- `POST /api/complaints/:id/assign` - Assign to staff
-- `POST /api/complaints/:id/vote` - Vote on complaint
-
-### Staff
-- `GET /api/staff` - List all staff members
-
-### Feedback
-- `POST /api/feedback` - Submit feedback for resolved complaint
-
-## 🗄️ Database Schema
-
-- **User** - Students and admins
-- **Staff** - Maintenance staff with departments
-- **Complaint** - Complaint tickets with status tracking
-- **Vote** - Upvote/downvote system
-- **Feedback** - Post-resolution feedback and ratings
-
-## 🛠️ Development
-
-### Quick Start Commands
-
-**Start Backend (with auto-reload):**
 ```bash
-cd HostelBot1/backend
-npm run dev
+cd backend
+npm install
 ```
 
-**Start Frontend:**
+Create a `.env` file in the backend folder:
+```
+DATABASE_URL="your_database_connection_here"
+JWT_SECRET="any_random_secret_text"
+PORT=5001
+```
+
+Set up the database:
 ```bash
-cd HostelBot1/frontend
+npx prisma generate
+npx prisma migrate dev
+npm run seed
+```
+
+Start the server:
+```bash
 npm start
 ```
 
-**Start Both Servers at Once:**
-```bash
-cd HostelBot1
-./start-dev.sh
-```
+The backend will run on `http://localhost:5001`
 
-### Backend Development
-```bash
-cd backend
-npm run dev  # Uses nodemon for auto-reload
-```
+### Step 2: Start the Frontend
 
-### Frontend Development
+Open a new terminal and run:
+
 ```bash
 cd frontend
-npm start  # Hot reload enabled
-```
-
-### Database Management
-
-**View/Edit database with Prisma Studio:**
-```bash
-cd backend
-npx prisma studio
-```
-
-**Create new migration:**
-```bash
-npx prisma migrate dev --name migration_name
-```
-
-**Reset database (development only):**
-```bash
-npx prisma migrate reset
-```
-
-## 🌐 Production Build
-
-### Backend
-```bash
-cd backend
+npm install
 npm start
 ```
-Consider using PM2 or similar process manager for production.
 
-### Frontend
+The website will open at `http://localhost:3000`
+
+## Default Login
+
+After running `npm run seed`, you can login with:
+- **Email:** admin@college.edu
+- **Password:** admin123
+
+## Main Features
+
+**For Students:**
+- Create account and login
+- Submit complaints with images
+- See all complaints
+- Vote on complaints
+- Track your complaint status
+- Give feedback on fixed issues
+
+**For Admins:**
+- See all complaints
+- Assign complaints to staff
+- Update complaint status
+- View statistics
+**For Admins:**
+- See all complaints
+- Assign complaints to staff
+- Update complaint status
+- View statistics
+
+## Available Pages
+
+- **Login** - Sign in to your account
+- **Signup** - Create a new account
+- **Dashboard** - Overview of your complaints
+- **Submit Complaint** - Report a new issue
+- **My Complaints** - See your submitted complaints
+- **All Complaints** - View all complaints (with voting)
+- **Admin Panel** - Manage everything (admins only)
+- **Feedback** - Rate resolved complaints
+- **Profile** - View your information
+
+## Need Help?
+
+**Can't connect to database?**
+- Make sure PostgreSQL is running
+- Check your DATABASE_URL in the .env file
+
+**Port already in use?**
 ```bash
-cd frontend
-npm run build
-```
-Serve the `build/` folder with a static file server.
-
-## 🐛 Troubleshooting
-
-**Port already in use:**
-```bash
-# Kill process on port 5001 (backend)
+# For backend (port 5001)
 lsof -ti :5001 | xargs kill -9
 
-# Kill process on port 3000 (frontend)
+# For frontend (port 3000)
 lsof -ti :3000 | xargs kill -9
 ```
 
-**Database connection issues:**
-- Verify MySQL is running
-- Check DATABASE_URL in `.env`
-- Ensure database `HostelBot` exists
-
-**Prisma errors:**
+**Want to reset the database?**
 ```bash
-# Regenerate Prisma client
-npx prisma generate
-
-# Check migration status
-npx prisma migrate status
+cd backend
+npx prisma migrate reset
 ```
-
-## 📝 License
-
-MIT
-
-## 👥 Contributors
-
-Created for hostel management automation.
