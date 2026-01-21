@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 import '../styles/login.css';
 import { authAPI } from '../utils/api';
 
@@ -48,7 +49,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-logo">
-          🏠
+          <FaHome />
         </div>
         <h1 className="login-title">HostelBot</h1>
         <p className="login-subtitle">Welcome back! Please sign in to continue.</p>

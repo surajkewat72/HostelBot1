@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ComplaintCard from '../components/ComplaintCard';
 import { complaintsAPI, getCurrentUser } from '../utils/api';
+import { FaChartBar, FaHourglassHalf, FaSync, FaCheckCircle, FaEdit, FaClipboardList, FaGlobe, FaLightbulb } from 'react-icons/fa';
 import '../styles/dashboard.css';
 import '../styles/complaint.css';
 
@@ -78,7 +79,7 @@ const Dashboard = () => {
         <div className="content-header">
           <div className="welcome-banner">
             <div className="welcome-content">
-              <h1 className="welcome-title">Welcome back, {userName}! 👋</h1>
+              <h1 className="welcome-title">Welcome back, {userName}!</h1>
             </div>
           </div>
         </div>
@@ -87,28 +88,28 @@ const Dashboard = () => {
           {/* Stats Cards */}
           <div className="stats-grid">
             <div className="stat-card stat-card-animated">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>📊</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaChartBar /></div>
               <div className="stat-info">
                 <div className="stat-label">Total Complaints</div>
                 <div className="stat-value">{stats.total}</div>
               </div>
             </div>
             <div className="stat-card stat-card-animated">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}>⏳</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}><FaHourglassHalf /></div>
               <div className="stat-info">
                 <div className="stat-label">Pending</div>
                 <div className="stat-value">{stats.pending}</div>
               </div>
             </div>
             <div className="stat-card stat-card-animated">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>🔄</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaSync /></div>
               <div className="stat-info">
                 <div className="stat-label">In Progress</div>
                 <div className="stat-value">{stats.inProgress}</div>
               </div>
             </div>
             <div className="stat-card stat-card-animated">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}>✅</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}><FaCheckCircle /></div>
               <div className="stat-info">
                 <div className="stat-label">Resolved</div>
                 <div className="stat-value">{stats.resolved}</div>
@@ -122,7 +123,7 @@ const Dashboard = () => {
               className="action-card action-primary" 
               onClick={handleSubmitComplaint}
             >
-              <div className="action-icon">📝</div>
+              <div className="action-icon"><FaEdit /></div>
               <div className="action-content">
                 <div className="action-title">Submit Complaint</div>
                 <div className="action-desc">Report a new issue</div>
@@ -133,7 +134,7 @@ const Dashboard = () => {
               className="action-card action-secondary" 
               onClick={() => navigate('/dashboard/my-complaints')}
             >
-              <div className="action-icon">📋</div>
+              <div className="action-icon"><FaClipboardList /></div>
               <div className="action-content">
                 <div className="action-title">My Complaints</div>
                 <div className="action-desc">Track your issues</div>
@@ -144,7 +145,7 @@ const Dashboard = () => {
               className="action-card action-tertiary" 
               onClick={() => navigate('/dashboard/all-complaints')}
             >
-              <div className="action-icon">🌐</div>
+              <div className="action-icon"><FaGlobe /></div>
               <div className="action-content">
                 <div className="action-title">All Complaints</div>
                 <div className="action-desc">View & vote on issues</div>
@@ -156,7 +157,7 @@ const Dashboard = () => {
           {/* Recent Activity Section */}
           <div className="dashboard-section">
             <div className="section-header">
-              <h2 className="section-title">📊 Recent Activity</h2>
+              <h2 className="section-title"><FaChartBar /> Recent Activity</h2>
               <button 
                 className="section-link"
                 onClick={() => navigate('/dashboard/my-complaints')}
@@ -176,7 +177,7 @@ const Dashboard = () => {
                 ))
               ) : (
                 <div className="modern-empty-state">
-                  <div className="empty-state-icon">📝</div>
+                  <div className="empty-state-icon"><FaEdit /></div>
                   <div className="empty-state-text">No complaints yet</div>
                   <div className="empty-state-subtext">
                     Get started by submitting your first complaint
@@ -197,24 +198,24 @@ const Dashboard = () => {
           {/* Tips & Info Section */}
           <div className="info-card" style={{ marginTop: '28px' }}>
             <div className="info-card-header">
-              <span className="info-icon">💡</span>
+              <span className="info-icon"><FaLightbulb /></span>
               <h3 className="info-title">Quick Tips</h3>
             </div>
             <div className="info-card-body">
               <div className="info-item">
-                <span className="info-bullet">✓</span>
+                <span className="info-bullet"><FaCheckCircle /></span>
                 <div>Be specific and detailed when describing your complaint</div>
               </div>
               <div className="info-item">
-                <span className="info-bullet">✓</span>
+                <span className="info-bullet"><FaCheckCircle /></span>
                 <div>Include photos or videos if possible to help staff understand the issue</div>
               </div>
               <div className="info-item">
-                <span className="info-bullet">✓</span>
+                <span className="info-bullet"><FaCheckCircle /></span>
                 <div>Vote on other students' complaints to help prioritize important issues</div>
               </div>
               <div className="info-item">
-                <span className="info-bullet">✓</span>
+                <span className="info-bullet"><FaCheckCircle /></span>
                 <div>Check your complaint status regularly for updates from staff</div>
               </div>
             </div>

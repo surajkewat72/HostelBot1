@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ComplaintCard from '../components/ComplaintCard';
 import { complaintsAPI, getCurrentUser } from '../utils/api';
+import { FaChartBar, FaHourglassHalf, FaSync, FaCheckCircle, FaClipboardList, FaEdit, FaCalendarAlt, FaThumbsUp, FaThumbsDown, FaInfoCircle } from 'react-icons/fa';
 import '../styles/dashboard.css';
 import '../styles/complaint.css';
 
@@ -97,28 +98,28 @@ const AllComplaints = () => {
           {/* Statistics Cards */}
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>📊</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaChartBar /></div>
               <div className="stat-info">
                 <div className="stat-label">Total</div>
                 <div className="stat-value">{stats.total}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}>⏳</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}><FaHourglassHalf /></div>
               <div className="stat-info">
                 <div className="stat-label">Pending</div>
                 <div className="stat-value">{stats.pending}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>🔄</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaSync /></div>
               <div className="stat-info">
                 <div className="stat-label">In Progress</div>
                 <div className="stat-value">{stats.inProgress}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}>✓</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}><FaCheckCircle /></div>
               <div className="stat-info">
                 <div className="stat-label">Resolved</div>
                 <div className="stat-value">{stats.resolved}</div>
@@ -129,7 +130,7 @@ const AllComplaints = () => {
           {/* Filters and Sorting */}
           <div className="modern-filters-section">
             <div className="filters-header">
-              <h2 className="filters-title">🔍 Filter & Sort</h2>
+              <h2 className="filters-title">Filter & Sort</h2>
             </div>
             <div className="filters-controls">
               <div className="filter-group">
@@ -140,9 +141,9 @@ const AllComplaints = () => {
                   onChange={(e) => setFilter(e.target.value)}
                 >
                   <option value="all">All Status</option>
-                  <option value="pending">⏳ Pending</option>
-                  <option value="in progress">🔄 In Progress</option>
-                  <option value="resolved">✓ Resolved</option>
+                  <option value="pending">Pending</option>
+                  <option value="in progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
                 </select>
               </div>
               <div className="filter-group">
@@ -152,10 +153,10 @@ const AllComplaints = () => {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
-                  <option value="date">📅 Latest First</option>
-                  <option value="upvotes">👍 Most Liked</option>
-                  <option value="downvotes">👎 Most Disliked</option>
-                  <option value="title">🔤 Title A-Z</option>
+                  <option value="date">Latest First</option>
+                  <option value="upvotes">Most Liked</option>
+                  <option value="downvotes">Most Disliked</option>
+                  <option value="title">Title A-Z</option>
                 </select>
               </div>
             </div>
@@ -164,7 +165,7 @@ const AllComplaints = () => {
           {/* Complaints List */}
           <div className="complaints-section">
             <div className="complaints-header">
-              <h2 className="complaints-section-title">📋 Community Complaints</h2>
+              <h2 className="complaints-section-title"><FaClipboardList /> Community Complaints</h2>
               <div className="complaints-count">{filteredAndSortedComplaints.length} results</div>
             </div>
             
@@ -180,7 +181,7 @@ const AllComplaints = () => {
                 ))
               ) : (
                 <div className="modern-empty-state">
-                  <div className="empty-state-icon">📝</div>
+                  <div className="empty-state-icon"><FaEdit /></div>
                   <div className="empty-state-text">No complaints found</div>
                   <div className="empty-state-subtext">
                     {filter === 'all' 
@@ -196,18 +197,18 @@ const AllComplaints = () => {
           {/* Voting Instructions */}
           <div className="info-card">
             <div className="info-card-header">
-              <span className="info-icon">ℹ️</span>
+              <span className="info-icon"><FaInfoCircle /></span>
               <h3 className="info-title">How Voting Works</h3>
             </div>
             <div className="info-card-body">
               <div className="info-item">
-                <span className="info-bullet">👍</span>
+                <span className="info-bullet"><FaThumbsUp /></span>
                 <div>
                   <strong>Like</strong> complaints you agree with or find important
                 </div>
               </div>
               <div className="info-item">
-                <span className="info-bullet">👎</span>
+                <span className="info-bullet"><FaThumbsDown /></span>
                 <div>
                   <strong>Dislike</strong> complaints you disagree with or find unimportant
                 </div>

@@ -95,8 +95,8 @@ export const mockStaff = [
 ];
 
 export const authAPI = {
-  login: async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
+  login: async (email, password, userType) => {
+    const res = await api.post('/auth/login', { email, password, userType });
     storeUserData(res.data.token, res.data.user);
     return res;
   },

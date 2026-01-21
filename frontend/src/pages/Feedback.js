@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { feedbackAPI, complaintsAPI } from '../utils/api';
+import { FaHourglassHalf, FaTimesCircle, FaCheckCircle, FaEdit } from 'react-icons/fa';
 import '../styles/feedback.css';
 
 const Feedback = () => {
@@ -112,7 +113,7 @@ const Feedback = () => {
       <div className="feedback-container">
         <div className="feedback-card">
           <div style={{ textAlign: 'center', padding: '40px' }}>
-            <div style={{ fontSize: '32px', marginBottom: '16px' }}>⏳</div>
+            <div style={{ fontSize: '32px', marginBottom: '16px' }}><FaHourglassHalf /></div>
             <div>Loading complaint details...</div>
           </div>
         </div>
@@ -125,7 +126,7 @@ const Feedback = () => {
       <div className="feedback-container">
         <div className="feedback-card">
           <div style={{ textAlign: 'center', padding: '40px' }}>
-            <div style={{ fontSize: '32px', marginBottom: '16px' }}>❌</div>
+            <div style={{ fontSize: '32px', marginBottom: '16px' }}><FaTimesCircle /></div>
             <div>Complaint not found or not resolved yet.</div>
             <button 
               className="btn btn-primary" 
@@ -145,7 +146,7 @@ const Feedback = () => {
       <div className="feedback-container">
         <div className="feedback-card">
           <div className="success-message">
-            <div className="success-icon">✅</div>
+            <div className="success-icon"><FaCheckCircle /></div>
             <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
               Thank you for your feedback!
             </div>
@@ -172,7 +173,7 @@ const Feedback = () => {
       <div className="feedback-card">
         <div className="feedback-header">
           <div className="feedback-icon">
-            📝
+            <FaEdit />
           </div>
           <h1 className="feedback-title">Provide Feedback</h1>
           <p className="feedback-subtitle">

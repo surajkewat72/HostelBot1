@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 import '../styles/signup.css';
 import { authAPI } from '../utils/api';
 
@@ -70,7 +71,7 @@ const Signup = () => {
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-logo">
-          🏠
+          <FaHome />
         </div>
         <h1 className="signup-title">Join HostelBot</h1>
         <p className="signup-subtitle">Create your account to start managing complaints</p>

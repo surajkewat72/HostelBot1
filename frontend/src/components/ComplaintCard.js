@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { votingAPI } from '../utils/api';
+import { FaThumbsUp, FaThumbsDown, FaEdit, FaTrash } from 'react-icons/fa';
 import '../styles/complaint.css';
 
 const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, showActions = false, showVoting = false, showStudentActions = false }) => {
@@ -89,7 +90,7 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
               disabled={isVoting}
               title="Like this complaint"
             >
-              👍
+              <FaThumbsUp />
             </button>
             <span className="vote-count">{upvotes}</span>
             <button
@@ -98,14 +99,14 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
               disabled={isVoting}
               title="Dislike this complaint"
             >
-              👎
+              <FaThumbsDown />
             </button>
             <span className="vote-count">{downvotes}</span>
           </div>
         ) : (
           <div className="complaint-upvotes">
-            <span>👍 {upvotes}</span>
-            <span>👎 {downvotes}</span>
+            <span><FaThumbsUp /> {upvotes}</span>
+            <span><FaThumbsDown /> {downvotes}</span>
           </div>
         )}
       </div>
@@ -152,14 +153,14 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
               onClick={() => onEdit && onEdit(complaint)}
               style={{ fontSize: '12px', padding: '6px 12px', background: '#4A90E2', color: 'white', border: 'none' }}
             >
-              ✏️ Edit
+              <FaEdit /> Edit
             </button>
             <button
               className="btn btn-outline"
               onClick={() => onDelete && onDelete(complaint.id)}
               style={{ fontSize: '12px', padding: '6px 12px', background: '#E74C3C', color: 'white', border: 'none' }}
             >
-              🗑️ Delete
+              <FaTrash /> Delete
             </button>
           </div>
         </div>

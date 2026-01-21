@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { getCurrentUser } from '../utils/api';
+import { FaUser, FaEnvelope, FaTag, FaDoorOpen, FaBuilding, FaCheckCircle, FaKey } from 'react-icons/fa';
 import '../styles/profile.css';
 
 const Profile = () => {
@@ -44,7 +45,7 @@ const Profile = () => {
               
               <div className="profile-details">
                 <div className="profile-detail-item">
-                  <span className="detail-icon">👤</span>
+                  <span className="detail-icon"><FaUser /></span>
                   <div className="detail-content">
                     <label className="detail-label">Full Name</label>
                     <p className="detail-value">{user.name || 'Not provided'}</p>
@@ -52,7 +53,7 @@ const Profile = () => {
                 </div>
 
                 <div className="profile-detail-item">
-                  <span className="detail-icon">✉️</span>
+                  <span className="detail-icon"><FaEnvelope /></span>
                   <div className="detail-content">
                     <label className="detail-label">Email Address</label>
                     <p className="detail-value">{user.email || 'Not provided'}</p>
@@ -60,7 +61,7 @@ const Profile = () => {
                 </div>
 
                 <div className="profile-detail-item">
-                  <span className="detail-icon">🏷️</span>
+                  <span className="detail-icon"><FaTag /></span>
                   <div className="detail-content">
                     <label className="detail-label">Role</label>
                     <p className="detail-value">
@@ -72,7 +73,7 @@ const Profile = () => {
                 {user.userType === 'student' && (
                   <>
                     <div className="profile-detail-item">
-                      <span className="detail-icon">🚪</span>
+                      <span className="detail-icon"><FaDoorOpen /></span>
                       <div className="detail-content">
                         <label className="detail-label">Room Number</label>
                         <p className="detail-value">{user.room || 'Not provided'}</p>
@@ -80,7 +81,7 @@ const Profile = () => {
                     </div>
 
                     <div className="profile-detail-item">
-                      <span className="detail-icon">🏢</span>
+                      <span className="detail-icon"><FaBuilding /></span>
                       <div className="detail-content">
                         <label className="detail-label">Block</label>
                         <p className="detail-value">{user.block || 'Not provided'}</p>
@@ -99,7 +100,7 @@ const Profile = () => {
               
               <div className="profile-details">
                 <div className="profile-detail-item">
-                  <span className="detail-icon">✅</span>
+                  <span className="detail-icon"><FaCheckCircle /></span>
                   <div className="detail-content">
                     <label className="detail-label">Account Status</label>
                     <p className="detail-value status-active">Active</p>
@@ -107,7 +108,7 @@ const Profile = () => {
                 </div>
 
                 <div className="profile-detail-item">
-                  <span className="detail-icon">🔑</span>
+                  <span className="detail-icon"><FaKey /></span>
                   <div className="detail-content">
                     <label className="detail-label">Authentication</label>
                     <p className="detail-value">Token-based Login</p>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { complaintsAPI, staffAPI, getCurrentUser } from '../utils/api';
+import { FaChartBar, FaHourglassHalf, FaSync, FaCheckCircle, FaClipboardList } from 'react-icons/fa';
 import '../styles/dashboard.css';
 import '../styles/admin.css';
 
@@ -149,22 +150,22 @@ const AdminPanel = () => {
           {/* Admin Stats */}
           <div className="admin-stats-grid">
             <div className="admin-stat-card">
-              <div className="admin-stat-icon">📊</div>
+              <div className="admin-stat-icon"><FaChartBar /></div>
               <div className="admin-stat-number">{stats.total}</div>
               <div className="admin-stat-label">Total Complaints</div>
             </div>
             <div className="admin-stat-card">
-              <div className="admin-stat-icon">⏳</div>
+              <div className="admin-stat-icon"><FaHourglassHalf /></div>
               <div className="admin-stat-number">{stats.pending}</div>
               <div className="admin-stat-label">Pending</div>
             </div>
             <div className="admin-stat-card">
-              <div className="admin-stat-icon">🔄</div>
+              <div className="admin-stat-icon"><FaSync /></div>
               <div className="admin-stat-number">{stats.inProgress}</div>
               <div className="admin-stat-label">In Progress</div>
             </div>
             <div className="admin-stat-card">
-              <div className="admin-stat-icon">✅</div>
+              <div className="admin-stat-icon"><FaCheckCircle /></div>
               <div className="admin-stat-number">{stats.resolved}</div>
               <div className="admin-stat-label">Resolved</div>
             </div>
@@ -267,7 +268,7 @@ const AdminPanel = () => {
 
             {filteredComplaints.length === 0 && (
               <div style={{ padding: '40px', textAlign: 'center', color: '#666666' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }}>📋</div>
+                <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }}><FaClipboardList /></div>
                 <div style={{ fontSize: '16px', marginBottom: '8px' }}>No complaints found</div>
                 <div style={{ fontSize: '14px', color: '#999999' }}>
                   {filters.status !== 'all' || filters.category !== 'all'

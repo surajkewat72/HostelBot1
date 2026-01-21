@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { complaintsAPI, getCurrentUser } from '../utils/api';
+import { FaFolder, FaEdit, FaExclamationTriangle, FaFileAlt, FaPaperclip, FaCamera, FaImage } from 'react-icons/fa';
 import '../styles/complaint.css';
 import '../styles/dashboard.css';
 
@@ -156,7 +157,7 @@ const ComplaintForm = () => {
               {/* Category Selection */}
               <div className="form-section">
                 <div className="form-section-header">
-                  <span className="section-icon">📁</span>
+                  <span className="section-icon"><FaFolder /></span>
                   <h3 className="section-title">Category</h3>
                 </div>
                 <div className="form-group">
@@ -181,7 +182,7 @@ const ComplaintForm = () => {
               {/* Title */}
               <div className="form-section">
                 <div className="form-section-header">
-                  <span className="section-icon">📝</span>
+                  <span className="section-icon"><FaEdit /></span>
                   <h3 className="section-title">Title</h3>
                 </div>
                 <div className="form-group">
@@ -201,7 +202,7 @@ const ComplaintForm = () => {
               {/* Description */}
               <div className="form-section">
                 <div className="form-section-header">
-                  <span className="section-icon">📄</span>
+                  <span className="section-icon"><FaFileAlt /></span>
                   <h3 className="section-title">Description</h3>
                 </div>
                 <div className="form-group">
@@ -224,7 +225,7 @@ const ComplaintForm = () => {
               {/* File Upload */}
               <div className="form-section">
                 <div className="form-section-header">
-                  <span className="section-icon">📎</span>
+                  <span className="section-icon"><FaPaperclip /></span>
                   <h3 className="section-title">Attachment (Optional)</h3>
                 </div>
                 <div className="form-group">
@@ -239,7 +240,7 @@ const ComplaintForm = () => {
                     {formData.image ? (
                       <div className="file-preview-card">
                         <div className="file-info">
-                          <span className="file-icon">📷</span>
+                          <span className="file-icon"><FaImage /></span>
                           <div className="file-details">
                             <div className="file-name">{formData.image.name}</div>
                             <div className="file-size">
@@ -260,7 +261,7 @@ const ComplaintForm = () => {
                       </div>
                     ) : (
                       <div className="upload-placeholder">
-                        <div className="upload-icon">📸</div>
+                        <div className="upload-icon"><FaCamera /></div>
                         <div className="upload-text">
                           <strong>Click to upload</strong> or drag and drop
                         </div>
@@ -284,7 +285,7 @@ const ComplaintForm = () => {
               {/* Error Message */}
               {errors.general && (
                 <div className="alert alert-error">
-                  <span className="alert-icon">⚠️</span>
+                  <span className="alert-icon"><FaExclamationTriangle /></span>
                   {errors.general}
                 </div>
               )}

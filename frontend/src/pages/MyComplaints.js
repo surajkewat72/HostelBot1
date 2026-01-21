@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ComplaintCard from '../components/ComplaintCard';
 import { complaintsAPI, getCurrentUser } from '../utils/api';
+import { FaChartBar, FaHourglassHalf, FaSync, FaCheckCircle, FaClipboardList, FaEdit, FaCalendarAlt, FaGlobe, FaPlus } from 'react-icons/fa';
 import '../styles/dashboard.css';
 import '../styles/complaint.css';
 
@@ -126,28 +127,28 @@ const MyComplaints = () => {
           {/* Statistics Cards */}
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>📊</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaChartBar /></div>
               <div className="stat-info">
                 <div className="stat-label">Total</div>
                 <div className="stat-value">{stats.total}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}>⏳</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #F4C542, #E6B73A)' }}><FaHourglassHalf /></div>
               <div className="stat-info">
                 <div className="stat-label">Pending</div>
                 <div className="stat-value">{stats.pending}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}>🔄</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667EEA, #764BA2)' }}><FaSync /></div>
               <div className="stat-info">
                 <div className="stat-label">In Progress</div>
                 <div className="stat-value">{stats.inProgress}</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}>✅</div>
+              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #48BB78, #38A169)' }}><FaCheckCircle /></div>
               <div className="stat-info">
                 <div className="stat-label">Resolved</div>
                 <div className="stat-value">{stats.resolved}</div>
@@ -158,7 +159,7 @@ const MyComplaints = () => {
           {/* Filter Section */}
           <div className="modern-filters-section">
             <div className="filters-header">
-              <h2 className="filters-title">🔍 Filter Complaints</h2>
+              <h2 className="filters-title">Filter Complaints</h2>
             </div>
             <div className="filters-controls">
               <div className="filter-group">
@@ -169,9 +170,9 @@ const MyComplaints = () => {
                   onChange={(e) => setFilter(e.target.value)}
                 >
                   <option value="all">All Status</option>
-                  <option value="pending">⏳ Pending</option>
-                  <option value="in progress">🔄 In Progress</option>
-                  <option value="resolved">✅ Resolved</option>
+                  <option value="pending">Pending</option>
+                  <option value="in progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
                 </select>
               </div>
             </div>
@@ -180,7 +181,7 @@ const MyComplaints = () => {
           {/* Complaints List */}
           <div className="complaints-section">
             <div className="complaints-header">
-              <h2 className="complaints-section-title">📋 Your Complaints</h2>
+              <h2 className="complaints-section-title"><FaClipboardList /> Your Complaints</h2>
               <div className="complaints-count">{sortedComplaints.length} results</div>
             </div>
             
@@ -198,7 +199,7 @@ const MyComplaints = () => {
                 ))
               ) : (
                 <div className="modern-empty-state">
-                  <div className="empty-state-icon">📝</div>
+                  <div className="empty-state-icon"><FaEdit /></div>
                   <div className="empty-state-text">No complaints found</div>
                   <div className="empty-state-subtext">
                     {filter === 'all' 
@@ -227,7 +228,7 @@ const MyComplaints = () => {
               className="action-card action-primary" 
               onClick={() => navigate('/dashboard/submit')}
             >
-              <div className="action-icon">➕</div>
+              <div className="action-icon"><FaPlus /></div>
               <div className="action-content">
                 <div className="action-title">Submit New Complaint</div>
                 <div className="action-desc">Report a new issue or concern</div>
@@ -237,7 +238,7 @@ const MyComplaints = () => {
               className="action-card action-secondary" 
               onClick={() => navigate('/dashboard/all-complaints')}
             >
-              <div className="action-icon">🌐</div>
+              <div className="action-icon"><FaGlobe /></div>
               <div className="action-content">
                 <div className="action-title">View All Complaints</div>
                 <div className="action-desc">See community complaints and vote</div>
