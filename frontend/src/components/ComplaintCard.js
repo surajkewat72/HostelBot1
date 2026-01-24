@@ -7,6 +7,7 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
   const [localComplaint, setLocalComplaint] = useState(complaint);
   const [userVote, setUserVote] = useState(null);
   const [isVoting, setIsVoting] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const userEmail = localStorage.getItem('userEmail');
 
   const calculateVotes = (complaint) => {
@@ -76,7 +77,13 @@ const ComplaintCard = ({ complaint, onVote, onStatusChange, onEdit, onDelete, sh
         )}
       </div>
 
-      <p className="complaint-description">{localComplaint.description}</p>
+      <p 
+        className={`complaint-description ${isDescriptionExpanded ? 'expanded' : ''}`}
+        onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+        title="Click to expand/collapse"
+      >
+        {localComplaint.description}
+      </p>
 
       <div className="complaint-footer">
         <div className="complaint-date">
