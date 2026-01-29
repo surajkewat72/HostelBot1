@@ -39,7 +39,7 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password, userType } = req.body;
+    const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -47,15 +47,6 @@ router.post('/login', async (req, res) => {
 
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(400).json({ error: 'Incorrect password. Please try again.' });
-
-    // Validate that the user is trying to login with the correct role
-    if (userType && user.userType !== userType) {
-      const correctRole = user.userType === 'admin' ? 'Admin' : 'Student';
-      const attemptedRole = userType === 'admin' ? 'Admin' : 'Student';
-      return res.status(403).json({ 
-        error: `This account is registered as ${correctRole}. Please use "Login as ${correctRole}" button.` 
-      });
-    }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ 

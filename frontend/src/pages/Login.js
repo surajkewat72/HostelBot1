@@ -30,14 +30,15 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = async (userType) => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     if (!validateForm()) return;
 
     setIsLoading(true);
     try {
-      const res = await authAPI.login(formData.email, formData.password, userType);
-      const type = res.data.user.userType || userType;
-      navigate(type === 'admin' ? '/admin' : '/dashboard');
+      const res = await authAPI.login(formData.email, formData.password);
+      const userType = res.data.user.userType;
+      navigate(userType === 'admin' ? '/admin' : '/dashboard');
     } catch (error) {
       setErrors({ general: error.response?.data?.error || 'Login failed. Please check your credentials.' });
     } finally {
@@ -91,20 +92,12 @@ const Login = () => {
 
           <div className="login-buttons">
             <button
-              type="button"
-              className="login-btn login-btn-student"
-              onClick={() => handleLogin('student')}
+              type="submit"
+              className="login-btn login-btn-primary"
+              onClick={handleLogin}
               disabled={isLoading}
             >
-              {isLoading ? 'Signing in...' : 'Login as Student'}
-            </button>
-            <button
-              type="button"
-              className="login-btn login-btn-admin"
-              onClick={() => handleLogin('admin')}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Login as Admin'}
+              {isLoading ? 'Signing in...' : 'Login'}
             </button>
           </div>
         </form>

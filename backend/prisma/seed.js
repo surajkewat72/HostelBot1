@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 
 async function main() {
   const staffData = [
-    { name: 'John Maintenance', department: 'Maintenance' },
-    { name: 'Sarah Electrician', department: 'Electrical' },
-    { name: 'Mike Plumber', department: 'Plumbing' },
-    { name: 'Lisa IT Support', department: 'IT' },
-    { name: 'David Mess Manager', department: 'Mess' }
+    { name: 'Rajesh Kumar', department: 'Maintenance' },
+    { name: 'Priya Sharma', department: 'Electrical' },
+    { name: 'Amit Patel', department: 'Plumbing' },
+    { name: 'Sneha Reddy', department: 'IT' },
+    { name: 'Vikram Singh', department: 'Mess' }
   ];
 
   for (const s of staffData) {

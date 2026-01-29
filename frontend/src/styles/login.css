@@ -218,6 +218,17 @@
   box-shadow: 0 4px 12px rgba(244, 197, 66, 0.2);
 }
 
+.login-btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #F4C542 0%, #E6B73A 100%);
+  color: #222222;
+}
+
+.login-btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(244, 197, 66, 0.4);
+}
+
 .login-btn:disabled {
   background: linear-gradient(135deg, #CCCCCC 0%, #999999 100%);
   cursor: not-allowed;
