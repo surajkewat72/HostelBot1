@@ -204,13 +204,28 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .feedback-container {
+    padding: 15px;
+  }
+
   .feedback-card {
-    padding: 30px 20px;
+    padding: 25px 18px;
     margin: 10px;
+    border-radius: 12px;
   }
   
+  .feedback-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+  }
+
   .feedback-title {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .feedback-subtitle {
+    font-size: 14px;
   }
   
   .rating-stars {
@@ -220,15 +235,34 @@
   .star {
     font-size: 28px;
   }
+
+  .complaint-info {
+    padding: 14px;
+  }
+
+  .submit-feedback-btn {
+    padding: 14px;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 480px) {
   .feedback-card {
     padding: 20px 15px;
   }
+
+  .feedback-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
   
   .feedback-title {
     font-size: 20px;
+  }
+
+  .feedback-subtitle {
+    font-size: 13px;
   }
   
   .star {
@@ -237,5 +271,13 @@
   
   .rating-stars {
     gap: 4px;
+  }
+
+  .rating-label {
+    font-size: 14px;
+  }
+
+  .submit-feedback-btn {
+    font-size: 14px;
   }
 }

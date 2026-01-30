@@ -85,6 +85,11 @@
   border: 1px solid #E6E6E6;
 }
 
+.complaints-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .complaints-table-header {
   padding: 20px 24px;
   border-bottom: 1px solid #E6E6E6;
@@ -346,29 +351,49 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-main-content {
     margin-left: 0;
   }
   
   .admin-content-header {
-    padding: 20px;
+    padding: 80px 20px 20px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-content-header {
+    padding: 80px 15px 15px 15px;
   }
   
   .admin-content-body {
-    padding: 20px;
+    padding: 15px;
   }
   
   .admin-content-title {
-    font-size: 24px;
+    font-size: 22px;
   }
   
   .admin-stats-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .admin-stat-card {
+    padding: 20px;
+  }
+
+  .admin-stat-icon {
+    font-size: 28px;
+  }
+
+  .admin-stat-number {
+    font-size: 28px;
   }
   
   .complaints-table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .complaints-table {
@@ -377,6 +402,7 @@
   
   .complaints-table-filters {
     flex-direction: column;
+    gap: 12px;
   }
   
   .table-filter-select {
@@ -385,10 +411,13 @@
   
   .complaint-actions {
     flex-direction: column;
+    gap: 8px;
   }
   
   .action-btn {
     width: 100%;
+    padding: 10px;
+    font-size: 13px;
   }
 }
 

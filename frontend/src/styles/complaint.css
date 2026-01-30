@@ -1231,11 +1231,146 @@
 }
 
 @media (max-width: 768px) {
+  .complaint-form-container {
+    padding: 0;
+  }
+
+  .modern-complaint-form {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .complaint-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .complaint-title {
+    font-size: 16px;
+  }
+
+  .complaint-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .complaint-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .complaint-voting {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .modal-content {
     max-width: 95%;
+    margin: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 20px;
   }
 
   .edit-complaint-form .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 14px;
+  }
+
+  .form-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modern-file-upload {
+    padding: 24px 16px;
+  }
+
+  .upload-icon {
+    font-size: 36px;
+  }
+
+  .upload-text {
+    font-size: 14px;
+  }
+
+  .upload-hint {
+    font-size: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .btn-cancel,
+  .btn-submit-modern {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .file-preview-card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .file-info {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .complaint-card {
+    padding: 16px;
+  }
+
+  .complaint-title {
+    font-size: 15px;
+  }
+
+  .complaint-category {
+    font-size: 11px;
+  }
+
+  .modern-complaint-form {
+    padding: 16px;
+  }
+
+  .back-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .modern-file-upload {
+    padding: 20px 12px;
+  }
+
+  .upload-icon {
+    font-size: 32px;
+  }
+
+  .form-section {
+    margin-bottom: 20px;
+  }
+
+  .modern-text-input,
+  .modern-select-input,
+  .modern-textarea-input {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }

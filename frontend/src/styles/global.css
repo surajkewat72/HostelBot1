@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: rgba(244, 197, 66, 0.2);
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -14,6 +19,7 @@ body {
   background-color: #FFFDF5;
   color: #222222;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 code {
@@ -179,6 +185,12 @@ code {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 15px;
@@ -187,11 +199,24 @@ code {
   .btn {
     padding: 10px 20px;
     font-size: 14px;
+    min-height: 44px; /* Touch-friendly minimum height */
   }
   
   .card {
-    padding: 20px;
+    padding: 18px;
     margin-bottom: 15px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px; /* Touch-friendly */
+  }
+
+  .status-badge {
+    font-size: 11px;
+    padding: 5px 10px;
   }
 }
 
@@ -202,5 +227,16 @@ code {
   
   .card {
     padding: 15px;
+    border-radius: 10px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .form-label {
+    font-size: 14px;
   }
 }
