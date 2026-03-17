@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import SplashScreen from './components/SplashScreen';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -13,6 +14,12 @@ import Feedback from './pages/Feedback';
 import Profile from './pages/Profile';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
   return (
     <Router>
       <div className="App">
