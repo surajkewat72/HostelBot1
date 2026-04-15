@@ -95,7 +95,7 @@ The website will open at `http://localhost:3000`
 ## Default Login
 
 After running `npm run seed`, you can login with:
-- **Email:** admin@college.edu
+- **Email:** admin@gmail.com
 - **Password:** admin123
 
 ## Main Features
